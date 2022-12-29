@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Calceus.Server", "Calceus\Server\Calceus.Server.csproj", "{FDE03717-6A37-4490-B422-FDCADB6DA627}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Calceus.Server", "Calceus\Server\Calceus.Server.csproj", "{FDE03717-6A37-4490-B422-FDCADB6DA627}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Calceus.Client", "Calceus\Client\Calceus.Client.csproj", "{2A009D00-A38E-4F53-A748-1633CD5A0674}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Calceus.Client", "Calceus\Client\Calceus.Client.csproj", "{2A009D00-A38E-4F53-A748-1633CD5A0674}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Calceus.Shared", "Calceus\Shared\Calceus.Shared.csproj", "{90E57BF2-A23C-4ECD-AA75-D45B082ADA64}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Calceus.Shared", "Calceus\Shared\Calceus.Shared.csproj", "{90E57BF2-A23C-4ECD-AA75-D45B082ADA64}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
