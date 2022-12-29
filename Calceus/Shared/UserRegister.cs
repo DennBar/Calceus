@@ -17,5 +17,8 @@ namespace Calceus.Shared
 
         [Compare("Password", ErrorMessage = "Las contraseñas no coinciden")]
         public string ConfirmPassword { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Debes seleccionar un rol")]
+        public string Role { get; set; } = string.Empty;
     }
 }
