@@ -2,6 +2,7 @@ global using Microsoft.EntityFrameworkCore;
 global using Calceus.Shared;
 global using Calceus.Server.Data;
 global using Calceus.Server.Services.AuthService;
+global using Calceus.Server.Services.RoleService;
 
 using Microsoft.AspNetCore.ResponseCompression;
 
@@ -17,6 +18,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
 var app = builder.Build();

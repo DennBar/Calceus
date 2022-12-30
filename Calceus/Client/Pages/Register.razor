@@ -1,4 +1,5 @@
 ﻿@page "/register"
+@inject IRoleService RoleService
 @inject IAuthService AuthService
 
 <PageTitle>Register</PageTitle>
@@ -6,11 +7,16 @@
 <div class="container">
     @if (isProcessing)
     {
-        <div>Espere</div>
+        <div class="my-lg-5 d-flex align-items-center justify-content-center">
+            <div class="spinner-border text-primary"
+             style="width: 3rem; height: 3rem;"
+             role="status">
+            </div>
+        </div>
     }
     else
     {
-        <h3>Regístrate</h3>
+        <h3 class="py-2">Regístrate</h3>
         <EditForm Model="user" OnValidSubmit="RegisterHandler">
             <DataAnnotationsValidator />
             <div class="mb-3">
@@ -31,21 +37,27 @@
             <div class="mb-3">
                 <div class="form-group">
                     <label for="role">Rol del usuario</label>
-                    <InputSelect @bind-Value="@user.Role" class="form-select">
+                    <InputSelect @bind-Value="@user.RoleId" class="form-select">
                         <option value="0" disabled="disabled" selected>Selecciona un Rol</option>
-                        @foreach (var role in Roles)
+                        @foreach (var role in RoleService.Roles)
                         {
-                            <option value="@role">@role</option>
+                            <option value="@role.Id">@role.Name</option>
                         }
                     </InputSelect>
-                    <ValidationMessage For="@(()=>user.Role)" />
+                    <ValidationMessage For="@(()=>user.RoleId)" />
                 </div>
             </div>
             <button type="submit" class="btn btn-primary">Registrar</button>
-            <div class="alert alert-dismissible @messageCssClass">
-                @*<button type="button" class="btn-close" data-bs-dismiss="alert"></button>*@
-                <strong>@message</strong>
-            </div>
+            @if (message.Length > 0)
+            {
+                <div class="py-2">
+                    <div class="alert alert-dismissible @messageCssClass">
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        <strong>@message</strong>
+                    </div>
+                </div>
+            }
+
         </EditForm>
     }
 </div>
@@ -58,11 +70,14 @@
     string message = string.Empty;
     string messageCssClass = string.Empty;
 
-    List<String> Roles = new List<string>()
+    protected override async Task OnInitializedAsync()
     {
-        "Customer",
-        "Business"
-    };
+        isProcessing = true;
+
+        await RoleService.GetRoles();
+
+        isProcessing = false;
+    }
 
     async Task RegisterHandler()
     {
