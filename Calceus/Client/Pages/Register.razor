@@ -2,7 +2,7 @@
 @inject IRoleService RoleService
 @inject IAuthService AuthService
 
-<PageTitle>Register</PageTitle>
+<PageTitle>Regístrate</PageTitle>
 
 <div class="container">
     @if (isProcessing)
@@ -48,17 +48,16 @@
                 </div>
             </div>
             <button type="submit" class="btn btn-primary">Registrar</button>
-            @if (message.Length > 0)
-            {
-                <div class="py-2">
-                    <div class="alert alert-dismissible @messageCssClass">
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                        <strong>@message</strong>
-                    </div>
-                </div>
-            }
-
         </EditForm>
+        @if (message.Length > 0)
+        {
+            <div class="py-2">
+                <div class="alert alert-dismissible @messageCssClass">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    <strong>@message</strong>
+                </div>
+            </div>
+        }
     }
 </div>
 

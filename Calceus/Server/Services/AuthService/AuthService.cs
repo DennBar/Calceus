@@ -19,7 +19,9 @@ namespace Calceus.Server.Services.AuthService
         {
             var response = new ServiceResponse<string>();
 
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email.ToLower().Equals(email.ToLower()));
+            var user = await _context.Users
+                .Include(u => u.Role)
+                .FirstOrDefaultAsync(u => u.Email.ToLower().Equals(email.ToLower()));
 
             if (user == null)
             {
@@ -102,7 +104,7 @@ namespace Calceus.Server.Services.AuthService
             };
 
             var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8
-                .GetBytes(_configuration.GetSection("AppSetting:Token").Value));
+                .GetBytes(_configuration.GetSection("AppSettings:Token").Value));
 
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 

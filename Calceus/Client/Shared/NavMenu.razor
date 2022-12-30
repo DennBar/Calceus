@@ -1,4 +1,8 @@
-﻿<header>
+﻿@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
+@inject ILocalStorageService LocalStorage
+
+<header>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
             <a class="navbar-brand" href="/">Calceus</a>
@@ -12,11 +16,27 @@
                 </form>
                 <ul class="navbar-nav">
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"><i class="bi bi-person-fill"></i> Usuarios</a>
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" href="/register">Regístrate</a>
-                            <a class="dropdown-item" href="#">Inicia sesión</a>
-                        </div>
+                        <a class="nav-link dropdown-toggle"
+                           data-bs-toggle="dropdown"
+                           href="#"
+                           role="button"
+                           aria-haspopup="true"
+                           aria-expanded="false">
+                            <i class="bi bi-person-fill"></i> Usuarios
+                        </a>
+                        <AuthorizeView>
+                            <Authorized>
+                                <div class="dropdown-menu">
+                                    <button class="dropdown-item" @onclick="LogoutHandler">Cerrar sesión</button>
+                                </div>
+                            </Authorized>
+                            <NotAuthorized>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="register">Regístrate</a>
+                                    <a class="dropdown-item" href="login">Inicia sesión</a>
+                                </div>
+                            </NotAuthorized>
+                        </AuthorizeView>
                     </li>
                 </ul>
 
@@ -26,5 +46,10 @@
 </header>
 
 @code {
-
+    private async Task LogoutHandler()
+    {
+        await LocalStorage.RemoveItemAsync("authToken");
+        await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        NavigationManager.NavigateTo("");
+    }
 }
