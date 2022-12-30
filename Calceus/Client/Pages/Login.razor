@@ -66,9 +66,9 @@
 
             await AuthenticationStateProvider.GetAuthenticationStateAsync();
 
-            isProcessing = false;
-
             NavigationManager.NavigateTo("");
+
+            isProcessing = false;
         }
         else
         {
