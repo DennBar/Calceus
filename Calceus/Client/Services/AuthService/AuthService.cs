@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Components.Authorization;
-
-namespace Calceus.Client.Services.AuthService
+﻿namespace Calceus.Client.Services.AuthService
 {
     public class AuthService : IAuthService
     {
@@ -24,10 +22,10 @@ namespace Calceus.Client.Services.AuthService
             return await result.Content.ReadFromJsonAsync<ServiceResponse<string>>();
         }
 
-        public async Task<ServiceResponse<int>?> Register(UserRegister user)
+        public async Task<ServiceResponse<int>> Register(UserRegister user)
         {
             var result = await _http.PostAsJsonAsync("api/auth/register", user);
-            return await result.Content.ReadFromJsonAsync<ServiceResponse<int>?>();
+            return await result.Content.ReadFromJsonAsync<ServiceResponse<int>>();
         }
     }
 }
