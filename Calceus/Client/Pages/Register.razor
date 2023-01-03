@@ -37,11 +37,11 @@
             <div class="mb-3">
                 <div class="form-group">
                     <label for="role">Rol del usuario</label>
-                    <InputSelect @bind-Value="@user.RoleId" class="form-select">
-                        <option value="0" disabled="disabled" selected>Selecciona un Rol</option>
+                    <InputSelect id="role" @bind-Value="user.RoleId" class="form-select">
+                        <option value="0" selected disabled>Selecciona un Rol</option>
                         @foreach (var role in RoleService.Roles)
                         {
-                            <option value="@role.Id">@role.Name</option>
+                            <option value="@role.Id">@role.Description</option>
                         }
                     </InputSelect>
                     <ValidationMessage For="@(()=>user.RoleId)" />

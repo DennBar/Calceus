@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Calceus.Shared
 {
@@ -21,7 +16,7 @@ namespace Calceus.Shared
         [Compare("Password", ErrorMessage = "Las contraseñas no coinciden")]
         public string ConfirmPassword { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "Debes seleccionar un rol")]
-        public int RoleId { get; set; }
+        [Range(1, int.MaxValue, ErrorMessage = "Debes seleccionar un rol")]
+        public int RoleId { get; set; } = 0;
     }
 }
