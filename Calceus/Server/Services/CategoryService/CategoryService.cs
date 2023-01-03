@@ -60,7 +60,7 @@
 
         public async Task<ServiceResponse<List<Category>>> GetAdminCategories()
         {
-            var categories = await _context.Categories.ToListAsync();
+            var categories = await _context.Categories.Where(c => !c.Deleted).ToListAsync();
 
             return new ServiceResponse<List<Category>>
             {

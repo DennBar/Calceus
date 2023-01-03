@@ -23,7 +23,7 @@
             <div class="col">Nombre</div>
             <div class="col">Url</div>
             <div class="col">Visible</div>
-            <div class="col">Eliminado</div>
+            <div class="col d-none">Eliminado</div>
             <div class="col"></div>
         </div>
 
@@ -34,15 +34,15 @@
                 <EditForm Model="editingCategory" OnSubmit="UpsertCategory">
                     <div class="row py-2 m-0 border">
                         <div class="col">
-                            <InputText @bind-Value="editingCategory.Name" class="form-control"></InputText>
+                            <InputText @bind-Value="editingCategory.Name" class="form-control" />
                         </div>
                         <div class="col">
-                            <InputText @bind-Value="editingCategory.Url" class="form-control"></InputText>
+                            <InputText @bind-Value="editingCategory.Url" class="form-control" />
                         </div>
                         <div class="col">
                             <InputCheckbox @bind-Value="editingCategory.Visible" style="transform:scale(1.5,1.5)" />
                         </div>
-                        <div class="col">
+                        <div class="col d-none">
                             <InputCheckbox @bind-Value="editingCategory.Deleted" style="transform:scale(1.5,1.5)" />
                         </div>
                         <div class="col">
@@ -62,7 +62,7 @@
                     <div class="col">@category.Name</div>
                     <div class="col">@category.Url</div>
                     <div class="col">@(category.Visible ? "✔️" : "")</div>
-                    <div class="col">@(category.Deleted ? "✔️" : "")</div>
+                    <div class="col d-none">@(category.Deleted ? "✔️" : "")</div>
                     <div class="col">
                         <button class="btn btn-primary" @onclick="(()=>EditCategory(category))">
                             <i class="bi bi-pencil-fill"></i>
