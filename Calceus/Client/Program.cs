@@ -3,6 +3,7 @@ global using Calceus.Shared;
 global using Microsoft.AspNetCore.Components.Authorization;
 global using Calceus.Client.Services.RoleService;
 global using Calceus.Client.Services.CategoryService;
+global using Calceus.Client.Services.SizeService;
 global using Calceus.Client.Services.AuthService;
 using Microsoft.AspNetCore.Components.Web;
 using Calceus.Client;
@@ -19,6 +20,7 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 
 builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<ISizeService,SizeService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddOptions();
 builder.Services.AddAuthorizationCore();

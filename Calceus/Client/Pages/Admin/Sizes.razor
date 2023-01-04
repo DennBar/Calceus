@@ -1,0 +1,91 @@
+﻿@page "/admin/sizes/{page:int}"
+@inject ISizeService SizeService
+@attribute [Authorize(Roles = "admin")]
+@implements IDisposable
+
+<PageTitle>Tallas</PageTitle>
+
+<div class="container">
+    @if (isProccesing)
+    {
+        <div class="my-lg-5 d-flex align-items-center justify-content-center">
+            <div class="spinner-border text-primary"
+             style="width: 3rem; height: 3rem;"
+             role="status">
+            </div>
+        </div>
+    }
+    else
+    {
+        <button class="btn btn-primary my-4">
+            <i class="bi bi-plus"></i> Nueva talla
+        </button>
+
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">Medida en centímetros</th>
+                    <th scope="col">Ecuador</th>
+                    <th scope="col">USA</th>
+                    <th scope="col">Europa</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var size in SizeService.Sizes)
+                {
+                    <tr scope="row">
+                        <td>@size.Cm</td>
+                        <td>@size.Ec</td>
+                        <td>@size.Usa</td>
+                        <td>@size.Eu</td>
+                        <td>
+                            <button class="btn btn-primary">
+                                <i class="bi bi-pencil-fill"></i>
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div>
+            <ul class="pagination justify-content-end">
+                @for (var i = 1; i <= SizeService.PageCount; i++)
+                {
+                    <li class="page-item">
+                        <a class="page-link @(i == SizeService.PageIndex ? "active" : "")"
+                   href="/admin/sizes/@i">
+                            @i
+                        </a>
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+</div>
+
+
+@code {
+    [Parameter]
+    public int Page { get; set; } = 1;
+
+    bool isProccesing { get; set; } = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        isProccesing = true;
+        await SizeService.GetSizes(Page);
+        SizeService.SizeChanged += StateHasChanged;
+        isProccesing = false;
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await SizeService.GetSizes(Page);
+    }
+
+    public void Dispose()
+    {
+        SizeService.SizeChanged -= StateHasChanged;
+    }
+}

@@ -2,6 +2,7 @@ global using Microsoft.EntityFrameworkCore;
 global using Calceus.Shared;
 global using Calceus.Server.Data;
 global using Calceus.Server.Services.CategoryService;
+global using Calceus.Server.Services.SizeService;
 global using Calceus.Server.Services.AuthService;
 global using Calceus.Server.Services.RoleService;
 
@@ -52,6 +53,7 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<ISizeService, SizeService>();
 builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
