@@ -20,9 +20,6 @@
         {
             var response = await _hhtp.GetFromJsonAsync<ServiceResponse<SizeResponse>>($"api/size/all/{page}");
 
-            PageIndex = 1;
-            PageCount = 0;
-
             if (response != null && response.Data != null)
             {
                 Sizes = response.Data.Sizes;
