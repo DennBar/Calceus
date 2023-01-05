@@ -9,14 +9,32 @@
             _context = context;
         }
 
-        public Task<ServiceResponse<Size>> AddSize(Size size)
+        public async Task<ServiceResponse<Size>> AddSize(Size size)
         {
-            throw new NotImplementedException();
+            _context.Sizes.Add(size);
+            await _context.SaveChangesAsync();
+            return new ServiceResponse<Size> { Data = size };
         }
 
-        public Task<ServiceResponse<Size>> GetSizeById(int sizeId)
+        public async Task<ServiceResponse<Size>> GetSizeById(int sizeId)
         {
-            throw new NotImplementedException();
+            var response = new ServiceResponse<Size>();
+            Size size = null;
+            size = await _context.Sizes
+                .Include(s => s.Category)
+                .FirstOrDefaultAsync(s => s.Id == sizeId);
+
+            if (size != null)
+            {
+                response.Data = size;
+            }
+            else
+            {
+                response.Success = false;
+                response.Message = "Esta talla no existe";
+            }
+
+            return response;
         }
 
         public async Task<ServiceResponse<SizeResponse>> GetSizes(int page)
@@ -24,6 +42,7 @@
             var pageSize = 2f;
             var pageCount = Math.Ceiling((await _context.Sizes.ToListAsync()).Count / pageSize);
             var sizes = await _context.Sizes
+                .Include(s => s.Category)
                 .Skip((page - 1) * (int)pageSize)
                 .Take((int)pageSize)
                 .ToListAsync();
@@ -41,11 +60,34 @@
             return response;
         }
 
-
-
-        public Task<ServiceResponse<Size>> UpdateSize(Size size)
+        public async Task<ServiceResponse<Size>> UpdateSize(Size size)
         {
-            throw new NotImplementedException();
+            var response = await _context.Sizes
+                .Include(s => s.Category)
+                .FirstOrDefaultAsync(s => s.Id == size.Id);
+
+            if (response == null)
+            {
+                return new ServiceResponse<Size>
+                {
+                    Success = false,
+                    Message = "Talla no encontrada"
+
+                };
+            }
+
+            response.Cm = size.Cm;
+            response.Ec = size.Ec;
+            response.Usa = size.Usa;
+            response.Eu = size.Eu;
+            response.CategoryId = size.CategoryId;
+
+            await _context.SaveChangesAsync();
+
+            return new ServiceResponse<Size>
+            {
+                Data = size
+            };
         }
     }
 }

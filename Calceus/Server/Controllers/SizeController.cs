@@ -15,10 +15,34 @@ namespace Calceus.Server.Controllers
             _sizeService = sizeService;
         }
 
-        [HttpGet("all/{page}"), Authorize(Roles = "admin")]
+        [HttpGet("all/{page}")]
         public async Task<ActionResult<ServiceResponse<SizeResponse>>> GetSizes(int page = 1)
         {
             var response = await _sizeService.GetSizes(page);
+
+            return Ok(response);
+        }
+
+        [HttpPost("admin"), Authorize(Roles = "admin")]
+        public async Task<ActionResult<ServiceResponse<Size>>> AddSize(Size size)
+        {
+            var response = await _sizeService.AddSize(size);
+
+            return Ok(response);
+        }
+
+        [HttpPut("admin"), Authorize(Roles = "admin")]
+        public async Task<ActionResult<ServiceResponse<Size>>> UpdateSize(Size size)
+        {
+            var response = await _sizeService.UpdateSize(size);
+
+            return Ok(response);
+        }
+
+        [HttpGet("{sizeId}")]
+        public async Task<ActionResult<ServiceResponse<Size>>> GetSizeById(int sizeId)
+        {
+            var response = await _sizeService.GetSizeById(sizeId);
 
             return Ok(response);
         }

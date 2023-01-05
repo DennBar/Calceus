@@ -24,6 +24,7 @@
         <table class="table table-striped table-bordered">
             <thead>
                 <tr>
+                    <th scope="col">Categoría</th>
                     <th scope="col">Medida en centímetros</th>
                     <th scope="col">Ecuador</th>
                     <th scope="col">USA</th>
@@ -35,6 +36,7 @@
                 @foreach (var size in SizeService.Sizes)
                 {
                     <tr scope="row">
+                        <td>@size.Category.Name</td>
                         <td>@size.Cm</td>
                         <td>@size.Ec</td>
                         <td>@size.Usa</td>
