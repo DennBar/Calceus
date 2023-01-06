@@ -18,7 +18,7 @@
 
         public async Task<Size> AddSize(Size size)
         {
-            var response = await _http.PostAsJsonAsync("api/size", size);
+            var response = await _http.PostAsJsonAsync("api/size/admin", size);
 
             var newSize = (await response.Content.ReadFromJsonAsync<ServiceResponse<Size>>()).Data;
 
@@ -27,7 +27,7 @@
 
         public async Task<ServiceResponse<Size>> GetSizeById(int sizeId)
         {
-            var response = await _http.GetFromJsonAsync<ServiceResponse<Size>>($"api/product{sizeId}");
+            var response = await _http.GetFromJsonAsync<ServiceResponse<Size>>($"api/size/{sizeId}");
 
             return response;
         }
@@ -48,7 +48,7 @@
 
         public async Task<Size> UpdateSize(Size size)
         {
-            var response = await _http.PutAsJsonAsync("api/size", size);
+            var response = await _http.PutAsJsonAsync("api/size/admin", size);
 
             var updatedSize = (await response.Content.ReadFromJsonAsync<ServiceResponse<Size>>()).Data;
 

@@ -1,6 +1,162 @@
 ﻿@page "/admin/size"
 @page "/admin/size/{id:int}"
+@attribute [Authorize(Roles = "admin")]
+@inject NavigationManager NavigationManager
+@inject ISizeService SizeService
+@inject ICategoryService CategoryService
+
+<PageTitle>Crear o editar talla</PageTitle>
+
+<div class="container">
+    @if (isProccesing)
+    {
+        <div class="my-lg-5 d-flex align-items-center justify-content-center">
+            <div class="spinner-border text-primary"
+             style="width: 3rem; height: 3rem;"
+             role="status">
+            </div>
+        </div>
+    }
+    else
+    {
+        if (errorMessage.Length > 0)
+        {
+            <div class="py-2">
+                <div class="alert alert-dismissible text-danger">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    <strong>@errorMessage</strong>
+                </div>
+            </div>
+        }
+        else
+        {
+            @if (size.Editing)
+            {
+                <h3 class="py-2">Editar talla @size.Cm para @size.Category.Name</h3>
+            }
+            else if (size.IsNew)
+            {
+                <h3 class="py-2">Añadir nueva talla</h3>
+            }
+
+            <EditForm Model="size" OnValidSubmit="UpsertSize">
+                <DataAnnotationsValidator />
+                <div class="mb-3">
+                    <label for="cm">Talla en centímetros</label>
+                    <InputNumber id="cm"
+                         class="form-control"
+                         @bind-Value="size.Cm" />
+                    <ValidationMessage For="@(()=>size.Cm)" />
+                </div>
+                <div class="mb-3">
+                    <label for="ec">Talla en formato de Ecuador</label>
+                    <InputNumber id="ec"
+                         class="form-control"
+                         ParsingErrorMessage="Si no existe la medida escriba 0"
+                         @bind-Value="size.Ec" />
+                    <ValidationMessage For="@(()=>size.Ec)" />
+                </div>
+                <div class="mb-3">
+                    <label for="usa">Talla en formato de Estados Unidos</label>
+                    <InputNumber id="usa"
+                         class="form-control"
+                         ParsingErrorMessage="Si no existe la medida escriba 0"
+                         @bind-Value="size.Usa" />
+                    <ValidationMessage For="@(()=>size.Usa)" />
+                </div>
+                <div class="mb-3">
+                    <label for="eu">Talla en formato de Europa</label>
+                    <InputNumber id="eu"
+                         class="form-control"
+                         ParsingErrorMessage="Si no existe la medida escriba 0"
+                         @bind-Value="size.Eu" />
+                    <ValidationMessage For="@(()=>size.Eu)" />
+                </div>
+                <div class="mb-3">
+                    <div class="form-group">
+                        <label for="category">Categoría para la talla</label>
+                        <InputSelect id="role" @bind-Value="size.CategoryId" class="form-select">
+                            <option value="0" selected disabled>Selecciona un Rol</option>
+                            @foreach (var category in CategoryService.AdminCategories)
+                            {
+                                <option value="@category.Id.ToString()">@category.Name</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="@(()=>size.CategoryId)" />
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">@buttonText</button>
+            </EditForm>
+        }
+    }
+</div>
 
 @code {
+    [Parameter]
+    public int Id { get; set; }
 
+    Size size = new Size();
+
+    bool isProccesing { get; set; } = false;
+    string buttonText { get; set; } = "";
+    string errorMessage { get; set; } = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CategoryService.GetAdminCategories();
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        isProccesing = true;
+
+        if (Id == 0)
+        {
+            size = new Size { IsNew = true };
+            buttonText = "Añadir Talla";
+        }
+        else
+        {
+            Size _size = (await SizeService.GetSizeById(Id)).Data;
+
+            if (_size == null)
+            {
+                errorMessage = $"Talla con el Id ${Id} no existe";
+                return;
+            }
+            else
+            {
+                size = _size;
+                size.Editing = true;
+                buttonText = "Actualizar producto";
+            }
+        }
+
+        isProccesing = false;
+    }
+
+    protected async void UpsertSize()
+    {
+        if (size.IsNew)
+        {
+            isProccesing = true;
+
+            await SizeService.AddSize(size);
+
+            isProccesing = false;
+
+            NavigationManager.NavigateTo($"admin/sizes/{1}");
+        }
+        else
+        {
+            isProccesing = true;
+
+            size.IsNew = false;
+            size = await SizeService.UpdateSize(size);
+
+            isProccesing = false;
+
+            NavigationManager.NavigateTo($"admin/sizes/{1}");
+        }
+    }
 }

@@ -1,4 +1,5 @@
 ﻿@page "/admin/sizes/{page:int}"
+@inject NavigationManager NavigationManager
 @inject ISizeService SizeService
 @attribute [Authorize(Roles = "admin")]
 @implements IDisposable
@@ -17,7 +18,8 @@
     }
     else
     {
-        <button class="btn btn-primary my-4">
+        <h3 class="py-2">Tallas</h3>
+        <button class="btn btn-primary my-4" @onclick="AddSize">
             <i class="bi bi-plus"></i> Nueva talla
         </button>
 
@@ -42,7 +44,7 @@
                         <td>@size.Usa</td>
                         <td>@size.Eu</td>
                         <td>
-                            <button class="btn btn-primary">
+                            <button class="btn btn-primary" @onclick="(()=>EditSize(size.Id))">
                                 <i class="bi bi-pencil-fill"></i>
                             </button>
                         </td>
@@ -89,5 +91,15 @@
     public void Dispose()
     {
         SizeService.SizeChanged -= StateHasChanged;
+    }
+
+    protected void AddSize()
+    {
+        NavigationManager.NavigateTo("admin/size");
+    }
+
+    protected void EditSize(int sizeId)
+    {
+        NavigationManager.NavigateTo($"admin/size/{sizeId}");
     }
 }

@@ -13,12 +13,20 @@ namespace Calceus.Shared
         public int Id { get; set; }
         public Category? Category { get; set; }
         [Range(1, int.MaxValue, ErrorMessage = "Debes seleccionar una categoría")]
-        public int CategoryId { get; set; }
+        public int CategoryId { get; set; } = 0;
         [Required(ErrorMessage = "El campo centímetro es obligatorio")]
-        public int Cm { get; set; }
-        public int Ec { get; set; }
-        public int Usa { get; set; }
-        public int Eu { get; set; }
+        [Range(1, double.MaxValue, ErrorMessage = "El valor debe ser mayor a 1")]
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal Cm { get; set; }
+        [Range(0, double.MaxValue, ErrorMessage = "Si no existe escriba 0")]
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal Ec { get; set; }
+        [Range(0, double.MaxValue, ErrorMessage = "Si no existe escriba 0")]
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal Usa { get; set; }
+        [Range(0, double.MaxValue, ErrorMessage = "Si no existe escriba 0")]
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal Eu { get; set; }
         [NotMapped]
         public bool Editing { get; set; } = false;
         [NotMapped]
