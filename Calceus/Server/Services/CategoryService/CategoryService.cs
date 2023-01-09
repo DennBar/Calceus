@@ -9,52 +9,36 @@
             _context = context;
         }
 
-        public async Task<ServiceResponse<List<Category>>> AddCategory(Category category)
+        public async Task<ServiceResponse<Category>> AddCategory(Category category)
         {
-            category.Editing = category.IsNew = false;
             _context.Categories.Add(category);
             await _context.SaveChangesAsync();
-            return await GetAdminCategories();
+            return new ServiceResponse<Category> { Data = category };
         }
 
-        public async Task<ServiceResponse<List<Category>>> UpdateCategory(Category category)
+        public async Task<ServiceResponse<Category>> UpdateCategory(Category category)
         {
-            var cat = await GetCategoryById(category.Id);
+            var response = await _context.Categories.FirstOrDefaultAsync(c => c.Id == category.Id);
 
-            if (cat == null)
+            if (response == null)
             {
-                return new ServiceResponse<List<Category>>
+                return new ServiceResponse<Category>
                 {
                     Success = false,
                     Message = "Categoría no encontrada"
                 };
             }
 
-            cat.Name = category.Name;
-            cat.Url = category.Url;            
+            response.Name = category.Name;
+            response.Url = category.Url;
 
             await _context.SaveChangesAsync();
 
-            return await GetAdminCategories();
-        }
-
-        public async Task<ServiceResponse<List<Category>>> DeleteCategory(int id)
-        {
-            Category category = await GetCategoryById(id);
-
-            if (category == null)
+            return new ServiceResponse<Category>
             {
-                return new ServiceResponse<List<Category>>
-                {
-                    Success = false,
-                    Message = "Categoría no encontrada"
-                };
-            }
+                Data = category
+            };
 
-            category.Deleted = true;
-            await _context.SaveChangesAsync();
-
-            return await GetAdminCategories();
         }
 
         public async Task<ServiceResponse<List<Category>>> GetAdminCategories()
@@ -70,6 +54,26 @@
         private async Task<Category> GetCategoryById(int id)
         {
             return await _context.Categories.FirstOrDefaultAsync(c => c.Id == id);
+        }
+
+        public Task<ServiceResponse<List<Category>>> GetBusinessCategories()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ServiceResponse<List<Category>>> GetCustomerCatagories()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ServiceResponse<CategoryResponse>> GetAdminCategories(int page)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<ServiceResponse<Category>> ICategoryService.GetCategoryById(int categoryId)
+        {
+            throw new NotImplementedException();
         }
     }
 
