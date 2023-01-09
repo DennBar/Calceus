@@ -31,8 +31,7 @@
             }
 
             cat.Name = category.Name;
-            cat.Url = category.Url;
-            cat.Visible = category.Visible;
+            cat.Url = category.Url;            
 
             await _context.SaveChangesAsync();
 
