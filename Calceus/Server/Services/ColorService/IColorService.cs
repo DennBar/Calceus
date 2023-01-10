@@ -2,9 +2,9 @@
 {
     public interface IColorService
     {
-        Task<ServiceResponse<ColorResponse>> GetBusinessColors(int page);
-        Task<ServiceResponse<List<Color>>> GetColors();
-        Task<ServiceResponse<Color>> AddColor(Color color);
-        Task<ServiceResponse<Color>> UpdateColor(Color color);
+        Task<ServiceResponse<ColorResponse>> GetMyBusinessColors(int page);
+        Task<ServiceResponse<List<Color>>> GetMyColors();
+        Task<ServiceResponse<Color>> AddMyColor(Color color);
+        Task<ServiceResponse<Color>> UpdateMyColor(Color color);
     }
 }

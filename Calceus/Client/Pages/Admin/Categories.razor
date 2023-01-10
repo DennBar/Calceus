@@ -1,4 +1,5 @@
-﻿@page "/admin/categories"
+﻿@page "/admin/categories/{page:int}"
+@inject NavigationManager NavigationManager
 @inject ICategoryService CategoryService
 @attribute [Authorize(Roles = "admin")]
 @implements IDisposable
@@ -19,117 +20,63 @@
     {
         <h3 class="py-2"> Categorías</h3>
 
-        <div class="row py-2 m-0 border fw-bold">
-            <div class="col">Nombre</div>
-            <div class="col">Url</div>
-            <div class="col">Visible</div>
-            <div class="col d-none">Eliminado</div>
-            <div class="col"></div>
-        </div>
-
-        @foreach (var category in CategoryService.AdminCategories)
-        {
-            @if (category.Editing)
-            {
-                <EditForm Model="editingCategory" OnSubmit="UpsertCategory">
-                    <div class="row py-2 m-0 border">
-                        <div class="col">
-                            <InputText @bind-Value="editingCategory.Name" class="form-control" />
-                        </div>
-                        <div class="col">
-                            <InputText @bind-Value="editingCategory.Url" class="form-control" />
-                        </div>
-                        <div class="col">
-                            <InputCheckbox @bind-Value="editingCategory.Visible" style="transform:scale(1.5,1.5)" />
-                        </div>
-                        <div class="col d-none">
-                            <InputCheckbox @bind-Value="editingCategory.Deleted" style="transform:scale(1.5,1.5)" />
-                        </div>
-                        <div class="col">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="bi bi-upload"></i>
-                            </button>
-                            <button class="btn btn-primary" @onclick="CancelEditing">
-                                <i class="bi bi-x-circle-fill"></i>
-                            </button>
-                        </div>
-                    </div>
-                </EditForm>
-            }
-            else
-            {
-                <div class="row py-2 m-0 border">
-                    <div class="col">@category.Name</div>
-                    <div class="col">@category.Url</div>
-                    <div class="col">@(category.Visible ? "✔️" : "")</div>
-                    <div class="col d-none">@(category.Deleted ? "✔️" : "")</div>
-                    <div class="col">
-                        <button class="btn btn-primary" @onclick="(()=>EditCategory(category))">
-                            <i class="bi bi-pencil-fill"></i>
-                        </button>
-                        <button class="btn btn-danger" @onclick="(()=>DeleteCategory(category.Id))">
-                            <i class="bi bi-trash-fill"></i>
-                        </button>
-                    </div>
-                </div>
-            }
-        }
-        <button class="btn btn-primary my-4" @onclick="CreateNewCategory">
+        <button class="btn btn-primary my-4" @onclick="AddCategory">
             <i class="bi bi-plus"></i> Nueva categoría
         </button>
+
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Url</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var category in CategoryService.AdminCategories)
+                {
+                    <tr scope="row">
+                        <td>@category.Name</td>
+                        <td>@category.Url</td>
+                        <td>
+                            <button class="btn btn-primary" @onclick="(()=>EditCategory(category.Id))">
+                                <i class="bi bi-pencil-fill"></i>
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
     }
 </div>
 
 @code {
-    Category editingCategory = null;
+    [Parameter]
+    public int Page { get; set; } = 1;
 
     bool isProcessing { get; set; } = false;
 
     protected override async Task OnInitializedAsync()
     {
         isProcessing = true;
-        await CategoryService.GetAdminCategories();
-        CategoryService.OnChange += StateHasChanged;
+        await CategoryService.GetAdminCategories(Page);
+        CategoryService.CategoryChanged += StateHasChanged;
         isProcessing = false;
     }
 
     public void Dispose()
     {
-        CategoryService.OnChange -= StateHasChanged;
+        CategoryService.CategoryChanged -= StateHasChanged;
     }
 
-    private void CreateNewCategory()
+    protected void AddCategory()
     {
-        editingCategory = CategoryService.CreateNewCategory();
+        NavigationManager.NavigateTo("admin/category");
     }
 
-    private void EditCategory(Category category)
+    protected void EditCategory(int categoryId)
     {
-        category.Editing = true;
-        editingCategory = category;
-    }
-
-    private async Task UpsertCategory()
-    {
-        if (editingCategory.IsNew)
-        {
-            await CategoryService.AddCategory(editingCategory);
-        }
-        else
-        {
-            await CategoryService.UpdateCategory(editingCategory);
-            editingCategory = new Category();
-        }
-    }
-
-    private async Task CancelEditing()
-    {
-        editingCategory = new Category();
-        await CategoryService.GetAdminCategories();
-    }
-
-    private async Task DeleteCategory(int id)
-    {
-        await CategoryService.DeleteCategory(id);
+        NavigationManager.NavigateTo($"admin/size/{categoryId}");
     }
 }

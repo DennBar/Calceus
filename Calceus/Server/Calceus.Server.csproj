@@ -23,5 +23,9 @@
     <ProjectReference Include="..\Shared\Calceus.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 
 </Project>

@@ -36,7 +36,7 @@ namespace Calceus.Server.Controllers
             return Ok(response);
         }
 
-        [HttpGet("business"), Authorize(Roles = "business")]
+        [HttpGet("business")]
         public async Task<ActionResult<ServiceResponse<List<Category>>>> GetBusinessCategories()
         {
             var response = await _categoryService.GetBusinessCategories();
@@ -47,6 +47,13 @@ namespace Calceus.Server.Controllers
         public async Task<ActionResult<ServiceResponse<List<Category>>>> GetCustomerCategories()
         {
             var response = await _categoryService.GetCustomerCatagories();
+            return Ok(response);
+        }
+
+        [HttpGet("{categoryId}")]
+        public async Task<ActionResult<ServiceResponse<Category>>> GetCategoryById(int categoryId)
+        {
+            var response = await _categoryService.GetCategoryById(categoryId);
             return Ok(response);
         }
     }

@@ -6,7 +6,6 @@ global using Calceus.Server.Services.SizeService;
 global using Calceus.Server.Services.ColorService;
 global using Calceus.Server.Services.AuthService;
 global using Calceus.Server.Services.RoleService;
-
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

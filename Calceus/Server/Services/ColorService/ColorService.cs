@@ -11,7 +11,7 @@
             _authService = authService;
         }
 
-        public async Task<ServiceResponse<Color>> AddColor(Color color)
+        public async Task<ServiceResponse<Color>> AddMyColor(Color color)
         {
             color.UserId = _authService.GetUserId();
 
@@ -25,10 +25,12 @@
             };
         }
 
-        public async Task<ServiceResponse<ColorResponse>> GetBusinessColors(int page)
+        public async Task<ServiceResponse<ColorResponse>> GetMyBusinessColors(int page)
         {
             var pageResults = 2f;
-            var pageCount = Math.Ceiling((await _context.Colors.ToListAsync()).Count / pageResults);
+            var pageCount = Math.Ceiling((await _context.Colors
+                .Where(c => c.UserId == _authService.GetUserId())
+                .ToListAsync()).Count / pageResults);
             var colors = await _context.Colors
                 .Skip((page - 1) * (int)pageResults)
                 .Take((int)pageResults)
@@ -47,9 +49,9 @@
             return response;
         }
 
-        public async Task<ServiceResponse<List<Color>>> GetColors()
+        public async Task<ServiceResponse<List<Color>>> GetMyColors()
         {
-            var colors = await _context.Colors.ToListAsync();
+            var colors = await _context.Colors.Where(c => c.UserId == _authService.GetUserId()).ToListAsync();
 
             return new ServiceResponse<List<Color>>
             {
@@ -57,10 +59,10 @@
             };
         }
 
-        public async Task<ServiceResponse<Color>> UpdateColor(Color color)
+        public async Task<ServiceResponse<Color>> UpdateMyColor(Color color)
         {
             var response = await _context.Colors
-                .FirstOrDefaultAsync(c => c.Id == color.Id);
+                .FirstOrDefaultAsync(c => c.Id == color.Id && c.UserId == _authService.GetUserId());
 
             if (response == null)
             {

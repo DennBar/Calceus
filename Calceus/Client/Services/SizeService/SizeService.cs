@@ -34,7 +34,7 @@
 
         public async Task GetSizes(int page)
         {
-            var response = await _http.GetFromJsonAsync<ServiceResponse<SizeResponse>>($"api/size/all/{page}");
+            var response = await _http.GetFromJsonAsync<ServiceResponse<SizeResponse>>($"api/size/admin/all/{page}");
 
             if (response != null && response.Data != null)
             {

@@ -2,12 +2,17 @@
 {
     public interface ICategoryService
     {
-        event Action OnChange;
+        event Action CategoryChanged;
+        int PageIndex { get; set; }
+        int PageCount { get; set; }
         List<Category> AdminCategories { get; set; }
-        Task GetAdminCategories();
-        Task AddCategory(Category category);
-        Task UpdateCategory(Category category);
-        Task DeleteCategory(int categoryId);
-        Category CreateNewCategory();
+        List<Category> BusinessCategories { get; set; }
+        List<Category> CustomerCategories { get; set; }
+        Task GetAdminCategories(int page);
+        Task GetBusinessCategories();
+        Task GetCustomerCategories();
+        Task<ServiceResponse<Category>> GetCategoryById(int categoryId);
+        Task<Category> AddCategory(Category category);
+        Task<Category> UpdateCategory(Category category);
     }
 }

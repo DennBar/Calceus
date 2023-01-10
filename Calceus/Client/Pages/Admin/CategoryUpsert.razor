@@ -1,0 +1,76 @@
+﻿@page "/admin/size"
+@page "/admin/size/{id:int}"
+@attribute [Authorize(Roles = "admin")]
+@inject NavigationManager NavigationManager
+@inject ICategoryService CategoryService
+
+<PageTitle>Crear o editar categoría</PageTitle>
+
+<div class="container">
+</div>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    Category category = new Category();
+
+    bool isProccesing { get; set; } = false;
+    string buttonText { get; set; } = "";
+    string errorMessage { get; set; } = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CategoryService.GetBusinessCategories();
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        isProccesing = true;
+
+        if (Id == 0)
+        {
+            category = new Category { IsNew = true };
+            buttonText = "Añadir categoría";
+        }
+        else
+        {
+            Category _category = (await CategoryService.GetCategoryById(Id)).Data;
+
+            if (_category == null)
+            {
+                errorMessage = $"Categoría con el Id {Id} no existe";
+                return;
+            }
+            else
+            {
+                category = _category;
+                category.Editing = true;
+                buttonText = "Actualizar Categoría";
+            }
+        }
+
+        isProccesing = false;
+    }
+
+    protected async void UspsertCategory()
+    {
+        if (category.IsNew)
+        {
+            isProccesing = true;
+
+            await CategoryService.AddCategory(category);
+
+            isProccesing = false;
+
+            NavigationManager.NavigateTo($"admin/categories/{1}");
+        }
+        else
+        {
+            isProccesing = true;
+
+            category.IsNew = false;
+
+        }
+    }
+}

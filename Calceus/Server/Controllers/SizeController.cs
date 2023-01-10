@@ -15,7 +15,7 @@ namespace Calceus.Server.Controllers
             _sizeService = sizeService;
         }
 
-        [HttpGet("all/{page}")]
+        [HttpGet("admin/all/{page}"), Authorize(Roles = "admin")]
         public async Task<ActionResult<ServiceResponse<SizeResponse>>> GetAdminSizes(int page = 1)
         {
             var response = await _sizeService.GetAdminSizes(page);

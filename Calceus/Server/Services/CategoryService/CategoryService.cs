@@ -70,23 +70,46 @@
 
         public async Task<ServiceResponse<List<Category>>> GetBusinessCategories()
         {
-            var categories = await _context.Categories.ToListAsync();
+            var response = await _context.Categories.ToListAsync();
 
             return new ServiceResponse<List<Category>>
             {
-                Data = categories
+                Data = response
             };
+
         }
 
         public async Task<ServiceResponse<List<Category>>> GetCustomerCatagories()
         {
-            var categories = await _context.Categories.ToListAsync();
+            var response = await _context.Categories.ToListAsync();
 
             return new ServiceResponse<List<Category>>
             {
-                Data = categories
+                Data = response
             };
         }
+
+        public async Task<ServiceResponse<Category>> GetCategoryById(int categoryId)
+        {
+            var response = new ServiceResponse<Category>();
+
+            Category category = null;
+
+            category = await _context.Categories.FirstOrDefaultAsync(c => c.Id == categoryId);
+
+            if (category != null)
+            {
+                response.Data = category;
+            }
+            else
+            {
+                response.Success = false;
+                response.Message = "Esta categoría no existe";
+            }
+
+            return response;
+        }
+
     }
 
 }

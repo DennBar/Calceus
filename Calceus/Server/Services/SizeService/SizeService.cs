@@ -87,7 +87,9 @@
         public async Task<ServiceResponse<Size>> GetSizeById(int sizeId)
         {
             var response = new ServiceResponse<Size>();
+
             Size size = null;
+
             size = await _context.Sizes
                 .Include(s => s.Category)
                 .FirstOrDefaultAsync(s => s.Id == sizeId);
