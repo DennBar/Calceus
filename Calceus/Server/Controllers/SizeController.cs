@@ -16,9 +16,9 @@ namespace Calceus.Server.Controllers
         }
 
         [HttpGet("all/{page}")]
-        public async Task<ActionResult<ServiceResponse<SizeResponse>>> GetSizes(int page = 1)
+        public async Task<ActionResult<ServiceResponse<SizeResponse>>> GetAdminSizes(int page = 1)
         {
-            var response = await _sizeService.GetSizes(page);
+            var response = await _sizeService.GetAdminSizes(page);
 
             return Ok(response);
         }
@@ -44,6 +44,13 @@ namespace Calceus.Server.Controllers
         {
             var response = await _sizeService.GetSizeById(sizeId);
 
+            return Ok(response);
+        }
+
+        [HttpGet("category/{categoryId}")]
+        public async Task<ActionResult<ServiceResponse<List<Size>>>> GetBusinessSizesByCategory(int categoryId)
+        {
+            var response = await _sizeService.GetBusinessSizesByCategory(categoryId);
             return Ok(response);
         }
     }

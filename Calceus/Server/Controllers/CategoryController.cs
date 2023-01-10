@@ -18,29 +18,36 @@ namespace Calceus.Server.Controllers
         [HttpPost("admin"), Authorize(Roles = "admin")]
         public async Task<ActionResult<ServiceResponse<List<Category>>>> AddCategory(Category category)
         {
-            var result = await _categoryService.AddCategory(category);
-            return Ok(result);
+            var response = await _categoryService.AddCategory(category);
+            return Ok(response);
         }
 
         [HttpPut("admin"), Authorize(Roles = "admin")]
         public async Task<ActionResult<ServiceResponse<List<Category>>>> UpdateCategory(Category category)
         {
-            var result = await _categoryService.UpdateCategory(category);
-            return Ok(result);
+            var response = await _categoryService.UpdateCategory(category);
+            return Ok(response);
         }
 
-        [HttpDelete("admin/{id}"), Authorize(Roles = "admin")]
-        public async Task<ActionResult<ServiceResponse<List<Category>>>> DeleteCategory(int id)
+        [HttpGet("admin/{page}"), Authorize(Roles = "admin")]
+        public async Task<ActionResult<ServiceResponse<CategoryResponse>>> GetAdminCategories(int page = 1)
         {
-            var result = await _categoryService.DeleteCategory(id);
-            return Ok(result);
+            var response = await _categoryService.GetAdminCategories(page);
+            return Ok(response);
         }
 
-        [HttpGet("admin"), Authorize(Roles = "admin")]
-        public async Task<ActionResult<ServiceResponse<List<Category>>>> GetAdminCategories()
+        [HttpGet("business"), Authorize(Roles = "business")]
+        public async Task<ActionResult<ServiceResponse<List<Category>>>> GetBusinessCategories()
         {
-            var result = await _categoryService.GetAdminCategories();
-            return Ok(result);
+            var response = await _categoryService.GetBusinessCategories();
+            return Ok(response);
+        }
+
+        [HttpGet("customer")]
+        public async Task<ActionResult<ServiceResponse<List<Category>>>> GetCustomerCategories()
+        {
+            var response = await _categoryService.GetCustomerCatagories();
+            return Ok(response);
         }
     }
 }

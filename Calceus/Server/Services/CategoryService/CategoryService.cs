@@ -12,8 +12,13 @@
         public async Task<ServiceResponse<Category>> AddCategory(Category category)
         {
             _context.Categories.Add(category);
+
             await _context.SaveChangesAsync();
-            return new ServiceResponse<Category> { Data = category };
+
+            return new ServiceResponse<Category>
+            {
+                Data = category
+            };
         }
 
         public async Task<ServiceResponse<Category>> UpdateCategory(Category category)
@@ -41,9 +46,31 @@
 
         }
 
-        public async Task<ServiceResponse<List<Category>>> GetAdminCategories()
+        public async Task<ServiceResponse<CategoryResponse>> GetAdminCategories(int page)
         {
-            var categories = await _context.Categories.Where(c => !c.Deleted).ToListAsync();
+            var pageResults = 2f;
+            var pageCount = Math.Ceiling((await _context.Categories.ToListAsync()).Count / pageResults);
+            var categories = await _context.Categories
+                .Skip((page - 1) * (int)pageResults)
+                .Take((int)pageResults)
+                .ToListAsync();
+
+            var response = new ServiceResponse<CategoryResponse>
+            {
+                Data = new CategoryResponse
+                {
+                    Categories = categories,
+                    PageIndex = page,
+                    Pages = (int)pageCount
+                }
+            };
+
+            return response;
+        }
+
+        public async Task<ServiceResponse<List<Category>>> GetBusinessCategories()
+        {
+            var categories = await _context.Categories.ToListAsync();
 
             return new ServiceResponse<List<Category>>
             {
@@ -51,29 +78,14 @@
             };
         }
 
-        private async Task<Category> GetCategoryById(int id)
+        public async Task<ServiceResponse<List<Category>>> GetCustomerCatagories()
         {
-            return await _context.Categories.FirstOrDefaultAsync(c => c.Id == id);
-        }
+            var categories = await _context.Categories.ToListAsync();
 
-        public Task<ServiceResponse<List<Category>>> GetBusinessCategories()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<ServiceResponse<List<Category>>> GetCustomerCatagories()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<ServiceResponse<CategoryResponse>> GetAdminCategories(int page)
-        {
-            throw new NotImplementedException();
-        }
-
-        Task<ServiceResponse<Category>> ICategoryService.GetCategoryById(int categoryId)
-        {
-            throw new NotImplementedException();
+            return new ServiceResponse<List<Category>>
+            {
+                Data = categories
+            };
         }
     }
 
