@@ -49,9 +49,9 @@
             }
         }
 
-        public Task<ServiceResponse<Category>> GetCategoryById(int categoryId)
+        public async Task<ServiceResponse<Category>> GetCategoryById(int categoryId)
         {
-            var response = _http.GetFromJsonAsync<ServiceResponse<Category>>($"api/category/{categoryId}");
+            var response = await _http.GetFromJsonAsync<ServiceResponse<Category>>($"api/category/{categoryId}");
 
             return response;
         }

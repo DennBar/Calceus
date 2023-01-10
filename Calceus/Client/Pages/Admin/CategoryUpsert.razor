@@ -1,5 +1,5 @@
-﻿@page "/admin/size"
-@page "/admin/size/{id:int}"
+﻿@page "/admin/category"
+@page "/admin/category/{id:int}"
 @attribute [Authorize(Roles = "admin")]
 @inject NavigationManager NavigationManager
 @inject ICategoryService CategoryService
@@ -7,6 +7,57 @@
 <PageTitle>Crear o editar categoría</PageTitle>
 
 <div class="container">
+    @if (isProccesing)
+    {
+        <div class="my-lg-5 d-flex align-items-center justify-content-center">
+            <div class="spinner-border text-primary"
+             style="width: 3rem; height: 3rem;"
+             role="status">
+            </div>
+        </div>
+    }
+    else
+    {
+        if (errorMessage.Length > 0)
+        {
+            <div class="py-2">
+                <div class="alert alert-dismissible text-danger">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    <strong>@errorMessage</strong>
+                </div>
+            </div>
+        }
+        else
+        {
+            @if (category.Editing)
+            {
+                <h3 class="py-2">Editar categoría @category.Name</h3>
+            }
+            else if (category.IsNew)
+            {
+                <h3 class="py-2">Añadir nueva categoría</h3>
+            }
+
+            <EditForm Model="category" OnValidSubmit="UpsertCategory">
+                <DataAnnotationsValidator />
+                <div class="mb-3">
+                    <label for="name">Nombre</label>
+                    <InputText id="name"
+                       class="form-control"
+                       @bind-Value="category.Name" />
+                    <ValidationMessage For="@(()=>category.Name)" />
+                </div>
+                <div class="mb-3">
+                    <label for="url">Url</label>
+                    <InputText id="url"
+                       class="form-control"
+                       @bind-Value="category.Url" />
+                    <ValidationMessage For="@(()=>category.Url)" />
+                </div>
+                <button type="submit" class="btn btn-primary">@buttonText</button>
+            </EditForm>
+        }
+    }
 </div>
 
 @code {
@@ -53,7 +104,7 @@
         isProccesing = false;
     }
 
-    protected async void UspsertCategory()
+    protected async void UpsertCategory()
     {
         if (category.IsNew)
         {
@@ -70,7 +121,11 @@
             isProccesing = true;
 
             category.IsNew = false;
+            category = await CategoryService.UpdateCategory(category);
 
+            isProccesing = false;
+
+            NavigationManager.NavigateTo($"admin/categories/{1}");
         }
     }
 }

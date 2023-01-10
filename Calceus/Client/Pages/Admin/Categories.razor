@@ -65,6 +65,11 @@
         isProcessing = false;
     }
 
+    protected override async Task OnParametersSetAsync()
+    {
+        await CategoryService.GetAdminCategories(Page);
+    }
+
     public void Dispose()
     {
         CategoryService.CategoryChanged -= StateHasChanged;
@@ -77,6 +82,6 @@
 
     protected void EditCategory(int categoryId)
     {
-        NavigationManager.NavigateTo($"admin/size/{categoryId}");
+        NavigationManager.NavigateTo($"admin/category/{categoryId}");
     }
 }
