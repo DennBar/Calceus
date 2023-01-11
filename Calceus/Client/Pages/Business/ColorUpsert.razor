@@ -1,5 +1,114 @@
-﻿<h3>UpsertColor</h3>
+﻿@page "/business/color"
+@page "/business/color{id:int}"
+@attribute [Authorize(Roles = "business")]
+@inject NavigationManager NavigationManager
+@inject IColorService ColorService
+
+<PageTitle>Crear o editar color</PageTitle>
+
+<div class="container">
+    @if (isProcessing)
+    {
+        <div class="my-lg-5 d-flex align-items-center justify-content-center">
+            <div class="spinner-border text-primary"
+             style="width: 3rem; height: 3rem;"
+             role="status">
+            </div>
+        </div>
+    }
+    else
+    {
+        @if (color.Editing)
+        {
+            <h3 class="py-2">Editar color @color.Name</h3>
+        }
+        else
+        {
+            <h3 class="py-2">Añadir nuevo color</h3>
+        }
+
+        <EditForm Model="color" OnValidSubmit="UpsertColor">
+            <DataAnnotationsValidator />
+            <div class="mb-3">
+                <label for="name">Nombre</label>
+                <InputText id="name"
+                       class="form-control"
+                       @bind-Value="color.Name" />
+                <ValidationMessage For="@(()=>color.Name)" />
+            </div>
+            <div class="mb-3">
+                <label for="name">Código</label>
+                <InputText id="code"
+                       class="form-control"
+                       @bind-Value="color.Code" />
+                <ValidationMessage For="@(()=>color.Code)" />
+            </div>
+            <button type="submit" class="btn btn-primary">@buttonText</button>
+        </EditForm>
+    }
+</div>
 
 @code {
+    [Parameter]
+    public int Id { get; set; }
 
+    Color color = new Color();
+
+    bool isProcessing { get; set; } = false;
+    string buttonText { get; set; } = "";
+    string errorMessage { get; set; } = string.Empty;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        isProcessing = true;
+
+        if (Id == 0)
+        {
+            color = new Color { IsNew = true };
+            buttonText = "Añadir color";
+        }
+        else
+        {
+            Color _color = (await ColorService.GetColorById(Id)).Data;
+
+            if (_color == null)
+            {
+                errorMessage = $"Category con el Id {Id} no existe";
+                return;
+            }
+            else
+            {
+                color = _color;
+                color.Editing = true;
+                buttonText = "Actualizar Color";
+            }
+        }
+
+        isProcessing = false;
+    }
+
+    protected async void UpsertColor()
+    {
+        if (color.IsNew)
+        {
+            isProcessing = true;
+
+            await ColorService.AddMyColor(color);
+
+            isProcessing = false;
+
+            NavigationManager.NavigateTo($"business/color/{1}");
+        }
+        else
+        {
+            isProcessing = true;
+
+            color.IsNew = false;
+            color = await ColorService.UpdateMyColor(color);
+
+            isProcessing = false;
+
+            NavigationManager.NavigateTo($"business/color/{1}");
+        }
+    }
 }

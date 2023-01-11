@@ -15,10 +15,11 @@ namespace Calceus.Server.Controllers
             _colorService = colorService;
         }
 
-        [HttpGet("business/all/{page}"), Authorize(Roles = "business")]
+        [HttpGet("business/{page}"), Authorize(Roles = "business")]
         public async Task<ActionResult<ServiceResponse<ColorResponse>>> GetAllMyColors(int page = 1)
         {
-            var response = _colorService.GetAllMyColors(page);
+            var response = await _colorService.GetAllMyColors(page);
+
             return Ok(response);
         }
 

@@ -32,6 +32,7 @@
                 .Where(c => c.UserId == _authService.GetUserId())
                 .ToListAsync()).Count / pageResults);
             var colors = await _context.Colors
+                .Where(c => c.UserId == _authService.GetUserId())
                 .Skip((page - 1) * (int)pageResults)
                 .Take((int)pageResults)
                 .ToListAsync();

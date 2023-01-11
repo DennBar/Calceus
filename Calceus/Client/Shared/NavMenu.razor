@@ -34,7 +34,7 @@
                                 </a>
                                 <div class="dropdown-menu">
                                     <a class="dropdown-item" href="admin/categories/1">Categorias</a>
-                                     <a class="dropdown-item" href="admin/sizes/1">Tallas</a>
+                                    <a class="dropdown-item" href="admin/sizes/1">Tallas</a>
                                 </div>
                             </li>
                         </ul>
@@ -43,8 +43,27 @@
                 <AuthorizeView Roles="business">
                     <Authorized>
                         <ul class="navbar-nav">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle"
+                                   data-bs-toggle="dropdown"
+                                   href="#"
+                                   role="button"
+                                   aria-haspopup="true"
+                                   aria-expanded="false">
+                                    <i class="bi bi-house-door-fill"></i> Admin
+                                </a>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="admin/categories/1">Categorias</a>
+                                    <a class="dropdown-item" href="admin/sizes/1">Tallas</a>
+                                </div>
+                            </li>
+                        </ul>
+                        <ul class="navbar-nav">
                             <li class="nav-item">
-                                <a class="nav-link" href="business/products">Mis Productos</a>
+                                <a class="nav-link" href="business/colors/1">Mis Colores</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="business/products/1">Mis Productos</a>
                             </li>
                         </ul>
                     </Authorized>

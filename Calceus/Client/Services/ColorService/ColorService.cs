@@ -3,17 +3,19 @@
     public class ColorService : IColorService
     {
         private readonly HttpClient _http;
+        private readonly AuthenticationStateProvider _authStateProvider;
 
-        public ColorService(HttpClient http)
+        public ColorService(HttpClient http, AuthenticationStateProvider authStateProvider)
         {
             _http = http;
+            _authStateProvider = authStateProvider;
         }
-
-        public event Action ColorChanged;
         public List<Color> AllMyColors { get; set; } = new List<Color>();
         public List<Color> MyColors { get; set; } = new List<Color>();
         public int PageIndex { get; set; } = 1;
         public int PageCount { get; set; } = 0;
+
+        public event Action ColorChanged;
 
         public async Task<Color> AddMyColor(Color color)
         {
@@ -62,6 +64,11 @@
             var updatedColor = (await response.Content.ReadFromJsonAsync<ServiceResponse<Color>>()).Data;
 
             return updatedColor;
+        }
+
+        private async Task<bool> IsUserAuthenticated()
+        {
+            return (await _authStateProvider.GetAuthenticationStateAsync()).User.Identity.IsAuthenticated;
         }
     }
 }

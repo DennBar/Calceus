@@ -7,7 +7,7 @@
 <PageTitle>Tallas</PageTitle>
 
 <div class="container">
-    @if (isProccesing)
+    @if (isProcessing)
     {
         <div class="my-lg-5 d-flex align-items-center justify-content-center">
             <div class="spinner-border text-primary"
@@ -73,14 +73,14 @@
     [Parameter]
     public int Page { get; set; } = 1;
 
-    bool isProccesing { get; set; } = false;
+    bool isProcessing { get; set; } = false;
 
     protected override async Task OnInitializedAsync()
     {
-        isProccesing = true;
+        isProcessing = true;
         await SizeService.GetSizes(Page);
         SizeService.SizeChanged += StateHasChanged;
-        isProccesing = false;
+        isProcessing = false;
     }
 
     protected override async Task OnParametersSetAsync()
