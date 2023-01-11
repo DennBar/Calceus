@@ -25,7 +25,7 @@
             };
         }
 
-        public async Task<ServiceResponse<ColorResponse>> GetMyBusinessColors(int page)
+        public async Task<ServiceResponse<ColorResponse>> GetAllMyColors(int page)
         {
             var pageResults = 2f;
             var pageCount = Math.Ceiling((await _context.Colors
@@ -49,6 +49,27 @@
             return response;
         }
 
+        public async Task<ServiceResponse<Color>> GetColorById(int colorId)
+        {
+            var response = new ServiceResponse<Color>();
+
+            Color color = null;
+
+            color = await _context.Colors.FirstOrDefaultAsync(c => c.Id == colorId);
+
+            if (color != null)
+            {
+                response.Data = color;
+            }
+            else
+            {
+                response.Success = false;
+                response.Message = "Este color no existe";
+            }
+
+            return response;
+        }
+
         public async Task<ServiceResponse<List<Color>>> GetMyColors()
         {
             var colors = await _context.Colors.Where(c => c.UserId == _authService.GetUserId()).ToListAsync();
@@ -62,7 +83,8 @@
         public async Task<ServiceResponse<Color>> UpdateMyColor(Color color)
         {
             var response = await _context.Colors
-                .FirstOrDefaultAsync(c => c.Id == color.Id && c.UserId == _authService.GetUserId());
+                .FirstOrDefaultAsync(c => c.Id == color.Id &&
+                c.UserId == _authService.GetUserId());
 
             if (response == null)
             {

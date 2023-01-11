@@ -1,0 +1,42 @@
+﻿@page "/business/colors/{page:int}"
+@inject NavigationManager NavigationManager
+@inject IColorService ColorService
+@attribute [Authorize(Roles = "business")]
+@implements IDisposable
+
+<PageTitle>Colores</PageTitle>
+
+@code {
+    [Parameter]
+    public int Page { get; set; } = 1;
+
+    bool isProcessing { get; set; } = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        isProcessing = true;
+        await ColorService.GetAllMyColors(Page);
+        ColorService.ColorChanged += StateHasChanged;
+        isProcessing = false;
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await ColorService.GetAllMyColors(Page);
+    }
+
+    public void Dispose()
+    {
+        ColorService.ColorChanged -= StateHasChanged;
+    }
+
+    protected void AddColor()
+    {
+        NavigationManager.NavigateTo("business/color");
+    }
+
+    protected void EditCategory(int colorId)
+    {
+        NavigationManager.NavigateTo($"business/color/{colorId}");
+    }
+}
