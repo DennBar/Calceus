@@ -27,7 +27,7 @@
 
         public async Task<ServiceResponse<ColorResponse>> GetAllMyColors(int page)
         {
-            var pageResults = 2f;
+            var pageResults = 10f;
             var pageCount = Math.Ceiling((await _context.Colors
                 .Where(c => c.UserId == _authService.GetUserId())
                 .ToListAsync()).Count / pageResults);

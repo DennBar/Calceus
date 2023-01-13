@@ -50,7 +50,7 @@
 
         public async Task<ServiceResponse<SizeResponse>> GetAdminSizes(int page)
         {
-            var pageSize = 2f;
+            var pageSize = 10f;
             var pageCount = Math.Ceiling((await _context.Sizes.ToListAsync()).Count / pageSize);
             var sizes = await _context.Sizes
                 .Include(s => s.Category)

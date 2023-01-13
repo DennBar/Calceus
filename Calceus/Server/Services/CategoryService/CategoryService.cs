@@ -48,7 +48,7 @@
 
         public async Task<ServiceResponse<CategoryResponse>> GetAdminCategories(int page)
         {
-            var pageResults = 2f;
+            var pageResults = 10f;
             var pageCount = Math.Ceiling((await _context.Categories.ToListAsync()).Count / pageResults);
             var categories = await _context.Categories
                 .Skip((page - 1) * (int)pageResults)

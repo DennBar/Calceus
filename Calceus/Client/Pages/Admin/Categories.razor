@@ -18,9 +18,9 @@
     }
     else
     {
-        <h3 class="py-2">Categorías</h3>
+        <h3 class="pt-2">Categorías</h3>
 
-        <button class="btn btn-primary my-4" @onclick="AddCategory">
+        <button class="btn btn-primary mb-4" @onclick="AddCategory">
             <i class="bi bi-plus"></i> Nueva categoría
         </button>
 
@@ -47,6 +47,19 @@
                 }
             </tbody>
         </table>
+        <div>
+            <ul class="pagination justify-content-end">
+                @for (var i = 1; i <= CategoryService.PageCount; i++)
+                {
+                    <li class="page-item">
+                        <a class="page-link @(i == CategoryService.PageIndex ? "active" : "")"
+                   href="/admin/categories/@i">
+                            @i
+                        </a>
+                    </li>
+                }
+            </ul>
+        </div>
     }
 </div>
 
