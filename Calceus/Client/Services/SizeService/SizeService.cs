@@ -3,10 +3,12 @@
     public class SizeService : ISizeService
     {
         private readonly HttpClient _http;
+        private readonly AuthenticationStateProvider _authStateProvider;
 
-        public SizeService(HttpClient http)
+        public SizeService(HttpClient http, AuthenticationStateProvider authStateProvider)
         {
             _http = http;
+            _authStateProvider = authStateProvider;
         }
 
         public List<Size> Sizes { get; set; } = new List<Size>();
@@ -16,13 +18,18 @@
 
         public event Action SizeChanged;
 
-        public async Task<Size> AddSize(Size size)
+        public async Task<string> AddSize(Size size)
         {
-            var response = await _http.PostAsJsonAsync("api/size/admin", size);
+            if (await IsUserAuthenticated())
+            {
+                await _http.PostAsJsonAsync("api/size/admin", size);
 
-            var newSize = (await response.Content.ReadFromJsonAsync<ServiceResponse<Size>>()).Data;
-
-            return newSize;
+                return $"admin/sizes/{1}";
+            }
+            else
+            {
+                return "login";
+            }
         }
 
         public async Task<ServiceResponse<Size>> GetSizeById(int sizeId)
@@ -46,13 +53,23 @@
             SizeChanged?.Invoke();
         }
 
-        public async Task<Size> UpdateSize(Size size)
+        public async Task<string> UpdateSize(Size size)
         {
-            var response = await _http.PutAsJsonAsync("api/size/admin", size);
+            if(await IsUserAuthenticated())
+            {
+                await _http.PutAsJsonAsync("api/size/admin", size);
 
-            var updatedSize = (await response.Content.ReadFromJsonAsync<ServiceResponse<Size>>()).Data;
+                return $"admin/sizes/{1}";
+            }
+            else
+            {
+                return "login";
+            }           
+        }
 
-            return updatedSize;
+        private async Task<bool> IsUserAuthenticated()
+        {
+            return (await _authStateProvider.GetAuthenticationStateAsync()).User.Identity.IsAuthenticated;
         }
     }
 }

@@ -19,10 +19,10 @@
     }
     else
     {
-        if (errorMessage.Length > 0)
+        @if (errorMessage.Length > 0)
         {
             <div class="py-2">
-                <div class="alert alert-dismissible text-danger">
+                <div class="alert alert-dismissible alert-danger">
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     <strong>@errorMessage</strong>
                 </div>
@@ -76,7 +76,7 @@
                     <div class="form-group">
                         <label for="category">Categoría para la talla</label>
                         <InputSelect id="role" @bind-Value="size.CategoryId" class="form-select">
-                            <option value="0" selected disabled>Selecciona un Rol</option>
+                            <option value="0" selected disabled>Selecciona una categoría</option>
                             @foreach (var category in CategoryService.BusinessCategories)
                             {
                                 <option value="@category.Id.ToString()">@category.Name</option>
@@ -141,22 +141,23 @@
         {
             isProccesing = true;
 
-            await SizeService.AddSize(size);
+            string url = await SizeService.AddSize(size);
 
             isProccesing = false;
 
-            NavigationManager.NavigateTo($"admin/sizes/{1}");
+            NavigationManager.NavigateTo(url);
         }
         else
         {
             isProccesing = true;
 
             size.IsNew = false;
-            size = await SizeService.UpdateSize(size);
+
+            string url = await SizeService.UpdateSize(size);
 
             isProccesing = false;
 
-            NavigationManager.NavigateTo($"admin/sizes/{1}");
+            NavigationManager.NavigateTo(url);
         }
     }
 }

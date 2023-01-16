@@ -1,0 +1,145 @@
+﻿@page "/business/product"
+@page "/business/product{id:int}"
+@attribute [Authorize(Roles = "business")]
+@inject NavigationManager NavigationManager
+@inject ICategoryService CategoryService
+@inject IProductService ProductService
+
+<PageTitle>Crear o editar producto</PageTitle>
+
+<div class="container">
+    @if (isProcessing)
+    {
+        <div class="my-lg-5 d-flex align-items-center justify-content-center">
+            <div class="spinner-border text-primary"
+             style="width: 3rem; height: 3rem;"
+             role="status">
+            </div>
+        </div>
+    }
+    else
+    {
+        @if (errorMessage.Length > 0)
+        {
+            <div class="py-2">
+                <div class="alert alert-dismissible alert-danger">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    <strong>@errorMessage</strong>
+                </div>
+            </div>
+        }
+        else
+        {
+            @if (product.Editing)
+            {
+                <h3 class="py-2">Editar @product.Name para @product.Category.Name</h3>
+            }
+            else if (product.IsNew)
+            {
+                <h3 class="py-2">Añadir nuevo Producto</h3>
+            }
+
+            <EditForm Model="product" OnValidSubmit="UpsertProduct">
+                <DataAnnotationsValidator />
+                <div class="mb-3">
+                    <label for="name">Nombre</label>
+                    <InputText id="name"
+                       class="form-control"
+                       @bind-Value="product.Name" />
+                    <ValidationMessage For="@(()=>product.Name)" />
+                </div>
+                <div class="mb-3">
+                    <div class="form-group">
+                        <label for="category">Categoría para el producto</label>
+                        <InputSelect id="role" @bind-Value="product.CategoryId" class="form-select">
+                            <option value="0" selected disabled>Selecciona un Rol</option>
+                            @foreach (var category in CategoryService.BusinessCategories)
+                            {
+                                <option value="@category.Id.ToString()">@category.Name</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="@(()=>product.CategoryId)" />
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="name">Descripción</label>
+                    <InputText id="name"
+                       class="form-control"
+                       @bind-Value="product.Description" />
+                    <ValidationMessage For="@(()=>product.Description)" />
+                </div>
+            </EditForm>
+        }
+    }
+</div>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    Product product = new Product();
+
+    bool isProcessing { get; set; } = false;
+    string buttonText { get; set; } = "";
+    string errorMessage { get; set; } = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CategoryService.GetBusinessCategories();
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        isProcessing = true;
+
+        if (Id == 0)
+        {
+            product = new Product { IsNew = true };
+            buttonText = "Añadir Producto";
+        }
+        else
+        {
+            Product _product = (await ProductService.GetMyProductById(Id)).Data;
+
+            if (_product == null)
+            {
+                errorMessage = $"Producto con Id ${Id} no existe";
+                return;
+            }
+            else
+            {
+                product = _product;
+                product.Editing = true;
+                buttonText = "Actualizar Producto";
+            }
+        }
+
+        isProcessing = false;
+    }
+
+    protected async void UpsertProduct()
+    {
+        if (product.IsNew)
+        {
+            isProcessing = true;
+
+            string url = await ProductService.AddProduct(product);
+
+            isProcessing = false;
+
+            NavigationManager.NavigateTo(url);
+        }
+        else
+        {
+            isProcessing = true;
+
+            product.IsNew = false;
+
+            string url = await ProductService.UpdateProduct(product);
+
+            isProcessing = false;
+
+            NavigationManager.NavigateTo(url);
+        }
+    }
+}

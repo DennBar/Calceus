@@ -56,7 +56,9 @@
 
             Color color = null;
 
-            color = await _context.Colors.FirstOrDefaultAsync(c => c.Id == colorId);
+            color = await _context.Colors.FirstOrDefaultAsync(
+                c => c.Id == colorId &&
+                c.UserId == _authService.GetUserId());
 
             if (color != null)
             {
@@ -73,7 +75,9 @@
 
         public async Task<ServiceResponse<List<Color>>> GetMyColors()
         {
-            var colors = await _context.Colors.Where(c => c.UserId == _authService.GetUserId()).ToListAsync();
+            var colors = await _context.Colors
+                .Where(c => c.UserId == _authService.GetUserId())
+                .ToListAsync();
 
             return new ServiceResponse<List<Color>>
             {

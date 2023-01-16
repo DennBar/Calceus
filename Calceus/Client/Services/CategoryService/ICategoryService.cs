@@ -12,7 +12,7 @@
         Task GetBusinessCategories();
         Task GetCustomerCategories();
         Task<ServiceResponse<Category>> GetCategoryById(int categoryId);
-        Task<Category> AddCategory(Category category);
-        Task<Category> UpdateCategory(Category category);
+        Task<string> AddCategory(Category category);
+        Task<string> UpdateCategory(Category category);
     }
 }

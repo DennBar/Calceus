@@ -8,8 +8,8 @@
         int PageCount { get; set; }
         Task GetSizes(int page);
         Task<ServiceResponse<Size>> GetSizeById(int sizeId);
-        Task<Size> AddSize(Size size);
-        Task<Size> UpdateSize(Size size);
+        Task<string> AddSize(Size size);
+        Task<string> UpdateSize(Size size);
 
     }
 }

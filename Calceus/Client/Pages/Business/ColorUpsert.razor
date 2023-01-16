@@ -18,33 +18,45 @@
     }
     else
     {
-        @if (color.Editing)
+        @if (errorMessage.Length > 0)
         {
-            <h3 class="py-2">Editar color @color.Name</h3>
+            <div class="py-2">
+                <div class="alert alert-dismissible alert-danger">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    <strong>@errorMessage</strong>
+                </div>
+            </div>
         }
         else
         {
-            <h3 class="py-2">Añadir nuevo color</h3>
-        }
+            @if (color.Editing)
+            {
+                <h3 class="py-2">Editar color @color.Name</h3>
+            }
+            else
+            {
+                <h3 class="py-2">Añadir nuevo color</h3>
+            }
 
-        <EditForm Model="color" OnValidSubmit="UpsertColor">
-            <DataAnnotationsValidator />
-            <div class="mb-3">
-                <label for="name">Nombre</label>
-                <InputText id="name"
+            <EditForm Model="color" OnValidSubmit="UpsertColor">
+                <DataAnnotationsValidator />
+                <div class="mb-3">
+                    <label for="name">Nombre</label>
+                    <InputText id="name"
                        class="form-control"
                        @bind-Value="color.Name" />
-                <ValidationMessage For="@(()=>color.Name)" />
-            </div>
-            <div class="mb-3">
-                <label for="name">Código</label>
-                <InputText id="code"
+                    <ValidationMessage For="@(()=>color.Name)" />
+                </div>
+                <div class="mb-3">
+                    <label for="name">Código</label>
+                    <InputText id="code"
                        class="form-control"
                        @bind-Value="color.Code" />
-                <ValidationMessage For="@(()=>color.Code)" />
-            </div>
-            <button type="submit" class="btn btn-primary">@buttonText</button>
-        </EditForm>
+                    <ValidationMessage For="@(()=>color.Code)" />
+                </div>
+                <button type="submit" class="btn btn-primary">@buttonText</button>
+            </EditForm>
+        }
     }
 </div>
 
@@ -73,7 +85,8 @@
 
             if (_color == null)
             {
-                errorMessage = $"Category con el Id {Id} no existe";
+                errorMessage = $"Color con el Id {Id} no existe";
+                isProcessing = false;
                 return;
             }
             else
@@ -82,9 +95,9 @@
                 color.Editing = true;
                 buttonText = "Actualizar Color";
             }
-        }
 
-        isProcessing = false;
+            isProcessing = false;
+        }
     }
 
     protected async void UpsertColor()
@@ -93,22 +106,23 @@
         {
             isProcessing = true;
 
-            await ColorService.AddMyColor(color);
+            string url = await ColorService.AddMyColor(color);
 
             isProcessing = false;
 
-            NavigationManager.NavigateTo($"business/color/{1}");
+            NavigationManager.NavigateTo(url);
         }
         else
         {
             isProcessing = true;
 
             color.IsNew = false;
-            color = await ColorService.UpdateMyColor(color);
+
+            string url = await ColorService.UpdateMyColor(color);
 
             isProcessing = false;
 
-            NavigationManager.NavigateTo($"business/color/{1}");
+            NavigationManager.NavigateTo(url);
         }
     }
 }

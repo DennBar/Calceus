@@ -17,13 +17,18 @@
 
         public event Action ColorChanged;
 
-        public async Task<Color> AddMyColor(Color color)
+        public async Task<string> AddMyColor(Color color)
         {
-            var response = await _http.PostAsJsonAsync("api/color/business", color);
+            if (await IsUserAuthenticated())
+            {
+                await _http.PostAsJsonAsync("api/color/business", color);
 
-            var newColor = (await response.Content.ReadFromJsonAsync<ServiceResponse<Color>>()).Data;
-
-            return newColor;
+                return $"business/colors/{1}";
+            }
+            else
+            {
+                return "login";
+            }
         }
 
         public async Task GetAllMyColors(int page)
@@ -57,13 +62,18 @@
             }
         }
 
-        public async Task<Color> UpdateMyColor(Color color)
+        public async Task<string> UpdateMyColor(Color color)
         {
-            var response = await _http.PutAsJsonAsync("api/color/business", color);
+            if (await IsUserAuthenticated())
+            {
+                await _http.PutAsJsonAsync("api/color/business", color);
 
-            var updatedColor = (await response.Content.ReadFromJsonAsync<ServiceResponse<Color>>()).Data;
-
-            return updatedColor;
+                return $"business/colors/{1}";
+            }
+            else
+            {
+                return "login";
+            }
         }
 
         private async Task<bool> IsUserAuthenticated()

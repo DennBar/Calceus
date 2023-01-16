@@ -18,10 +18,10 @@
     }
     else
     {
-        if (errorMessage.Length > 0)
+        @if (errorMessage.Length > 0)
         {
             <div class="py-2">
-                <div class="alert alert-dismissible text-danger">
+                <div class="alert alert-dismissible alert-danger">
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     <strong>@errorMessage</strong>
                 </div>
@@ -105,22 +105,23 @@
         {
             isProcessing = true;
 
-            await CategoryService.AddCategory(category);
+            string url = await CategoryService.AddCategory(category);
 
             isProcessing = false;
 
-            NavigationManager.NavigateTo($"admin/categories/{1}");
+            NavigationManager.NavigateTo(url);
         }
         else
         {
             isProcessing = true;
 
             category.IsNew = false;
-            category = await CategoryService.UpdateCategory(category);
+
+            string url = await CategoryService.UpdateCategory(category);
 
             isProcessing = false;
 
-            NavigationManager.NavigateTo($"admin/categories/{1}");
+            NavigationManager.NavigateTo(url);
         }
     }
 }

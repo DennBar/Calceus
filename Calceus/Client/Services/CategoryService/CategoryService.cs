@@ -3,9 +3,11 @@
     public class CategoryService : ICategoryService
     {
         private readonly HttpClient _http;
-        public CategoryService(HttpClient http)
+        private readonly AuthenticationStateProvider _authStateProvider;
+        public CategoryService(HttpClient http, AuthenticationStateProvider authStateProvider)
         {
             _http = http;
+            _authStateProvider = authStateProvider;
         }
 
         public List<Category> AdminCategories { get; set; } = new List<Category>();
@@ -16,13 +18,18 @@
 
         public event Action CategoryChanged;
 
-        public async Task<Category> AddCategory(Category category)
+        public async Task<string> AddCategory(Category category)
         {
-            var response = await _http.PostAsJsonAsync("api/category/admin", category);
+            if (await IsUserAuthenticated())
+            {
+                await _http.PostAsJsonAsync("api/category/admin", category);
 
-            var newCategory = (await response.Content.ReadFromJsonAsync<ServiceResponse<Category>>()).Data;
-
-            return newCategory;
+                return $"admin/categories/{1}";
+            }
+            else
+            {
+                return "login";
+            }
         }
 
         public async Task GetAdminCategories(int page)
@@ -66,13 +73,23 @@
             }
         }
 
-        public async Task<Category> UpdateCategory(Category category)
+        public async Task<string> UpdateCategory(Category category)
         {
-            var response = await _http.PutAsJsonAsync("api/category/admin", category);
+            if (await IsUserAuthenticated())
+            {
+                await _http.PutAsJsonAsync("api/category/admin", category);
 
-            var updatedCategory = (await response.Content.ReadFromJsonAsync<ServiceResponse<Category>>()).Data;
+                return $"admin/categories/{1}";
+            }
+            else
+            {
+                return "login";
+            }
+        }
 
-            return updatedCategory;
+        private async Task<bool> IsUserAuthenticated()
+        {
+            return (await _authStateProvider.GetAuthenticationStateAsync()).User.Identity.IsAuthenticated;
         }
     }
 }

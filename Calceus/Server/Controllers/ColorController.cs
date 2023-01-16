@@ -23,7 +23,7 @@ namespace Calceus.Server.Controllers
             return Ok(response);
         }
 
-        [HttpGet("{colorId}")]
+        [HttpGet("{colorId}"), Authorize(Roles = "business")]
         public async Task<ActionResult<ServiceResponse<Color>>> GetColorById(int colorId)
         {
             var response = await _colorService.GetColorById(colorId);
@@ -35,6 +35,7 @@ namespace Calceus.Server.Controllers
         public async Task<ActionResult<ServiceResponse<List<Color>>>> GetMyColors()
         {
             var response = _colorService.GetMyColors();
+
             return Ok(response);
         }
 
@@ -42,6 +43,7 @@ namespace Calceus.Server.Controllers
         public async Task<ActionResult<ServiceResponse<Color>>> AddMyColor(Color color)
         {
             var response = await _colorService.AddMyColor(color);
+
             return Ok(response);
         }
 
@@ -49,6 +51,7 @@ namespace Calceus.Server.Controllers
         public async Task<ActionResult<ServiceResponse<Color>>> UpdateMyColor(Color color)
         {
             var response = await _colorService.UpdateMyColor(color);
+
             return Ok(response);
         }
     }

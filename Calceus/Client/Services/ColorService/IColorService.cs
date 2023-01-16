@@ -10,7 +10,7 @@
         Task GetAllMyColors(int page);
         Task GetMyColors();
         Task<ServiceResponse<Color>> GetColorById(int colorId);
-        Task<Color> AddMyColor(Color color);
-        Task<Color> UpdateMyColor(Color color);
+        Task<string> AddMyColor(Color color);
+        Task<string> UpdateMyColor(Color color);
     }
 }
