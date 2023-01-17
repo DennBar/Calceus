@@ -33,7 +33,7 @@
             {
                 <h3 class="py-2">Editar color @color.Name</h3>
             }
-            else
+            else if (color.IsNew)
             {
                 <h3 class="py-2">Añadir nuevo color</h3>
             }
@@ -95,9 +95,8 @@
                 color.Editing = true;
                 buttonText = "Actualizar Color";
             }
-
-            isProcessing = false;
         }
+        isProcessing = false;
     }
 
     protected async void UpsertColor()

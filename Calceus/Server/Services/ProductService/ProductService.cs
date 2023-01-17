@@ -33,6 +33,7 @@
 
             product = await _context.Products
                 .Include(p => p.Category)
+                .Include(p => p.Images)
                 .FirstOrDefaultAsync(p => p.Id == productId && p.UserId == _authService.GetUserId());
 
             if (product != null)
@@ -76,6 +77,7 @@
         {
             var response = await _context.Products
                 .Include(p => p.Category)
+                .Include(p => p.Images)
                 .FirstOrDefaultAsync(p => p.Id == product.Id && p.UserId == _authService.GetUserId());
 
             if (product == null)
@@ -95,7 +97,7 @@
             var productImages = response.Images;
             _context.Images.RemoveRange(productImages);
 
-            response.Images = productImages;
+            response.Images = product.Images;
 
             await _context.SaveChangesAsync();
 

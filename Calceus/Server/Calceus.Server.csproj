@@ -23,9 +23,5 @@
     <ProjectReference Include="..\Shared\Calceus.Shared.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Services\StoreService\" />
-  </ItemGroup>
-
 
 </Project>

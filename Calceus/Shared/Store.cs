@@ -10,12 +10,14 @@ namespace Calceus.Shared
 {
     public class Store
     {
-        public int Id { get; set; }       
+        public int Id { get; set; }
         public Product? Product { get; set; }
         public int? ProductId { get; set; }
         public Size? Size { get; set; }
-        public int SizeId { get; set; }
+        [Range(1, int.MaxValue, ErrorMessage = "Debes seleccionar una talla")]
+        public int SizeId { get; set; } = 0;
         public Color? Color { get; set; }
+        [Range(1, int.MaxValue, ErrorMessage = "Debes seleccionar un color")]
         public int ColorId { get; set; }
         [Required(ErrorMessage = "El campo precio es obligatorio")]
         [Range(1, double.MaxValue, ErrorMessage = "El valor debe ser mayor a 1")]
