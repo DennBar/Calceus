@@ -21,6 +21,7 @@ namespace Calceus.Shared
         [Required(ErrorMessage = "El campo descripción es obligatorio")]
         public string Description { get; set; } = string.Empty;
         public List<Image> Images { get; set; } = new List<Image>();
+        public List<Store> Stores { get; set; } = new List<Store>();
         public bool Visible { get; set; } = true;
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public DateTime UpdatedAt { get; set; } = DateTime.Now;
