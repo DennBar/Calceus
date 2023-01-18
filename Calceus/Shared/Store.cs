@@ -26,7 +26,7 @@ namespace Calceus.Shared
         [Column(TypeName = "decimal(18,2)")]
         public decimal Price { get; set; }
         public int Quantity { get; set; }
-        public bool Visible { get; set; } = false;
+        public bool Visible { get; set; } = true;
         [NotMapped]
         public bool Editing { get; set; } = false;
         [NotMapped]

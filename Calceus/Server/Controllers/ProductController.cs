@@ -47,5 +47,13 @@ namespace Calceus.Server.Controllers
 
             return Ok(response);
         }
+
+        [HttpPut("business/store"), Authorize(Roles = "business")]
+        public async Task<ActionResult<ServiceResponse<Product>>> UpsertMyStoreByProduct(Product product)
+        {
+            var response = await _productService.UpsertMyStoreByProduct(product);
+
+            return Ok(response);
+        }
     }
 }

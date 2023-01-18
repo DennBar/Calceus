@@ -34,6 +34,7 @@
             product = await _context.Products
                 .Include(p => p.Category)
                 .Include(p => p.Images)
+                .Include(p => p.Stores)
                 .FirstOrDefaultAsync(p => p.Id == productId && p.UserId == _authService.GetUserId());
 
             if (product != null)
@@ -71,6 +72,51 @@
             };
 
             return response;
+        }
+
+        public async Task<ServiceResponse<Product>> UpsertMyStoreByProduct(Product product)
+        {
+            var response = await _context.Products
+                .FirstOrDefaultAsync(p => p.Id == product.Id && p.UserId == _authService.GetUserId());
+
+            if (response == null)
+            {
+                return new ServiceResponse<Product>
+                {
+                    Success = false,
+                    Message = "Producto no encontrado"
+                };
+            }
+
+            foreach (var storeItem in product.Stores)
+            {
+                var store = await _context.Stores
+                    .SingleOrDefaultAsync(s =>
+                    s.ProductId == storeItem.ProductId &&
+                    s.ColorId == storeItem.ColorId &&
+                    s.SizeId == storeItem.SizeId);
+
+                if (store == null)
+                {
+                    storeItem.Color = null;
+                    storeItem.Size = null;
+                    storeItem.UserId = _authService.GetUserId();
+                    _context.Stores.Add(storeItem);
+                }
+                else
+                {
+                    store.ColorId = storeItem.ColorId;
+                    store.SizeId = storeItem.SizeId;
+                    store.Price = storeItem.Price;
+                    store.Quantity = storeItem.Quantity;
+                }
+            }
+            await _context.SaveChangesAsync();
+
+            return new ServiceResponse<Product>
+            {
+                Data = product
+            };
         }
 
         public async Task<ServiceResponse<Product>> UpdateProduct(Product product)

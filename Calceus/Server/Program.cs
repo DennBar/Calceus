@@ -6,11 +6,11 @@ global using Calceus.Server.Services.SizeService;
 global using Calceus.Server.Services.ColorService;
 global using Calceus.Server.Services.AuthService;
 global using Calceus.Server.Services.RoleService;
+global using Calceus.Server.Services.ProductService;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using Calceus.Server.Services.ProductService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,9 +31,7 @@ builder.Services.AddSwaggerGen(c =>
     });
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
-        Name = "Authorization",
         Type = SecuritySchemeType.ApiKey,
-        Scheme = "Bearer",
         BearerFormat = "jwt",
         In = ParameterLocation.Header,
         Description = "Api Token Here"
@@ -45,11 +43,11 @@ builder.Services.AddSwaggerGen(c =>
         {
             Reference=new OpenApiReference
             {
-                Type=ReferenceType.SecurityScheme,
-                Id="Bearer"
+                Type = ReferenceType.SecurityScheme,
+                Id = "Bearer"
             }
         },
-        new string[] {}
+        new string[] { }
         }
     });
 });
