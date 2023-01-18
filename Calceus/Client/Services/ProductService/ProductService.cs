@@ -56,9 +56,23 @@
         {
             if (await IsUserAuthenticated())
             {
-                await _http.PutAsJsonAsync("api/product/business/", product);
+                await _http.PutAsJsonAsync("api/product/business", product);
 
                 return $"business/products/{1}";
+            }
+            else
+            {
+                return "login";
+            }
+        }
+
+        public async Task<string> UpsertMyStoreByProduct(Product product)
+        {
+            if (await IsUserAuthenticated())
+            {
+                await _http.PutAsJsonAsync("api/product/business/store", product);
+
+                return $"business/stores/{1}";
             }
             else
             {

@@ -10,5 +10,6 @@
         Task<ServiceResponse<Product>> GetMyProductById(int productId);
         Task<string> AddProduct(Product product);
         Task<string> UpdateProduct(Product product);
+        Task<string> UpsertMyStoreByProduct(Product product);
     }
 }
