@@ -34,7 +34,7 @@ namespace Calceus.Server.Controllers
         [HttpGet, Authorize(Roles = "business")]
         public async Task<ActionResult<ServiceResponse<List<Color>>>> GetMyColors()
         {
-            var response = _colorService.GetMyColors();
+            var response = await _colorService.GetMyColors();
 
             return Ok(response);
         }

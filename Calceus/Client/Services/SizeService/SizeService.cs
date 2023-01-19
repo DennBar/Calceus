@@ -12,6 +12,7 @@
         }
 
         public List<Size> Sizes { get; set; } = new List<Size>();
+        public List<Size> BusinessSizes { get; set; } = new List<Size>();
         public int PageIndex { get; set; } = 1;
         public int PageCount { get; set; } = 0;
 
@@ -53,9 +54,19 @@
             SizeChanged?.Invoke();
         }
 
+        public async Task GetSizesByCategoryId(int categoryId)
+        {
+            var response = await _http.GetFromJsonAsync<ServiceResponse<List<Size>>>($"api/size/business/{categoryId}");
+
+            if (response != null && response.Data != null)
+            {
+                BusinessSizes = response.Data;
+            }
+        }
+
         public async Task<string> UpdateSize(Size size)
         {
-            if(await IsUserAuthenticated())
+            if (await IsUserAuthenticated())
             {
                 await _http.PutAsJsonAsync("api/size/admin", size);
 
@@ -64,7 +75,7 @@
             else
             {
                 return "login";
-            }           
+            }
         }
 
         private async Task<bool> IsUserAuthenticated()

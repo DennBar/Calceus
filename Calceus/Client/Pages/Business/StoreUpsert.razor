@@ -1,0 +1,107 @@
+﻿@page "/business/store/{id:int}"
+@attribute [Authorize(Roles = "business")]
+@inject NavigationManager NavigationManager
+@inject IProductService ProductService
+@inject ISizeService SizeService
+@inject IColorService ColorService
+
+<div class="container">
+    @if (isProcessing)
+    {
+        <div class="my-lg-5 d-flex align-items-center justify-content-center">
+            <div class="spinner-border text-primary"
+             style="width: 3rem; height: 3rem;"
+             role="status">
+            </div>
+        </div>
+    }
+    else
+    {
+        @if (errorMessage.Length > 0)
+        {
+             <div class="py-2">
+                <div class="alert alert-dismissible alert-danger">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    <strong>@errorMessage</strong>
+                </div>
+            </div>
+        }
+        else
+        {
+            <h3 class="py-2">Editar tienda de @product.Name</h3>
+        }
+    }
+</div>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    Product product = new Product();
+
+    bool isProcessing { get; set; } = false;
+    string errorMessage { get; set; } = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await ColorService.GetMyColors();
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (Id == 0)
+        {
+            errorMessage = $"Producto con Id ${Id} no existe";
+            return;
+        }
+        else
+        {
+            Product _product = (await ProductService.GetMyProductById(Id)).Data;
+
+            if (_product == null)
+            {
+                errorMessage = $"Producto con Id ${Id} no existe";
+                return;
+            }
+            else
+            {
+                product = _product;
+
+                await SizeService.GetSizesByCategoryId(product.CategoryId);
+            }
+        }
+        isProcessing = false;
+    }
+
+    protected void addStoreInfo()
+    {
+        product.Stores.Add(new Store { IsNew = true, ProductId = product.Id });
+    }
+
+    protected void removeStoreInfo(int colorId, int sizeId)
+    {
+        var store = product.Stores.Find(s => s.ColorId == colorId && s.SizeId == sizeId);
+
+        if (store == null)
+        {
+            return;
+        }
+
+        if (store.IsNew)
+        {
+            product.Stores.Remove(store);
+        }
+        else
+        {
+            store.Visible = false;
+        }
+    }
+
+    protected async void UpsertStoreByProduct()
+    {
+        var url = await ProductService.UpsertMyStoreByProduct(product);
+
+        NavigationManager.NavigateTo($"/business/stores/{1}");
+
+    }
+}

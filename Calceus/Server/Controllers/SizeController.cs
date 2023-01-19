@@ -47,10 +47,10 @@ namespace Calceus.Server.Controllers
             return Ok(response);
         }
 
-        [HttpGet("category/{categoryId}")]
-        public async Task<ActionResult<ServiceResponse<List<Size>>>> GetBusinessSizesByCategory(int categoryId)
+        [HttpGet("business/{categoryId}")]
+        public async Task<ActionResult<ServiceResponse<List<Size>>>> GetSizesByCategoryId(int categoryId)
         {
-            var response = await _sizeService.GetBusinessSizesByCategory(categoryId);
+            var response = await _sizeService.GetSizesByCategoryId(categoryId);
             return Ok(response);
         }
     }

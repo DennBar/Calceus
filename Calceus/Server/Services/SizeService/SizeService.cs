@@ -71,7 +71,7 @@
             return response;
         }
 
-        public async Task<ServiceResponse<List<Size>>> GetBusinessSizesByCategory(int categoryId)
+        public async Task<ServiceResponse<List<Size>>> GetSizesByCategoryId(int categoryId)
         {
             var response = await _context.Sizes
                 .Include(s => s.Category)

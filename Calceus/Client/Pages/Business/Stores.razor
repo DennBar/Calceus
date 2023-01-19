@@ -1,5 +1,94 @@
-﻿<h3>Stores</h3>
+﻿@page "/business/stores/{page:int}"
+@inject NavigationManager NavigationManager
+@inject IProductService ProductService
+@attribute [Authorize(Roles = "business")]
+@implements IDisposable
+
+<div class="container">
+    @if (isProcessing)
+    {
+        <div class="my-lg-5 d-flex align-items-center justify-content-center">
+            <div class="spinner-border text-primary"
+             style="width: 3rem; height: 3rem;"
+             role="status">
+            </div>
+        </div>
+    }
+    else
+    {
+        <h3 class="pt-2">Mi Tienda de Productos</h3>
+
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Categoría</th>
+                    <th scope="col">Descripción</th>
+                    <th scope="col">Es Visible</th>
+                    <th scope="col">Fecha de creación</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var product in ProductService.MyProducts)
+                {
+                    <tr scope="row">
+                        <td>@product.Name</td>
+                        <td>@product.Category.Name</td>
+                        <td>@product.Description</td>
+                        <td>@product.Visible</td>
+                        <td>@product.CreatedAt</td>
+                        <td>
+                            <button class="btn btn-primary" @onclick="(()=>UpsertStoreByProduct(product.Id))">
+                                <i class="bi bi-pencil-fill"></i>
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div>
+            <ul class="pagination justify-content-end">
+                @for (var i = 1; i <= ProductService.PageCount; i++)
+                {
+                    <li class="page-item">
+                        <a class="page-link @(i == ProductService.PageIndex ? "active" : "")"
+                   href="/business/products/@i">
+                            @i
+                        </a>
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+</div>
 
 @code {
+    [Parameter]
+    public int Page { get; set; } = 1;
 
+    bool isProcessing { get; set; } = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        isProcessing = true;
+        await ProductService.GetMyProducts(Page);
+        ProductService.ProductChanged += StateHasChanged;
+        isProcessing = false;
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await ProductService.GetMyProducts(Page);
+    }
+
+    public void Dispose()
+    {
+        ProductService.ProductChanged -= StateHasChanged;
+    }
+
+    public void UpsertStoreByProduct(int productId)
+    {
+        NavigationManager.NavigateTo($"business/store/{productId}");
+    }
 }
