@@ -19,7 +19,7 @@
     {
         @if (errorMessage.Length > 0)
         {
-             <div class="py-2">
+            <div class="py-2">
                 <div class="alert alert-dismissible alert-danger">
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     <strong>@errorMessage</strong>
@@ -29,6 +29,64 @@
         else
         {
             <h3 class="py-2">Editar tienda de @product.Name</h3>
+
+            <EditForm Model="product" OnValidSubmit="UpsertStoreByProduct">
+                <div class="row">
+                    <div class="col">Talla</div>
+                    <div class="col">Color</div>
+                    <div class="col">Cantidad</div>
+                    <div class="col">Precio</div>
+                    <div class="col">Visible</div>
+                    <div class="col"></div>
+                </div>
+                @foreach (var storeItem in product.Stores)
+                {
+                    <div class="row">
+                        <div class="col">
+                            <InputSelect @bind-Value="storeItem.SizeId" class="form-control">
+                                <option value="0" selected disabled>Selecciona una talla</option>
+                                @foreach (var size in SizeService.BusinessSizes)
+                                {
+                                    <option value="@size.Id.ToString()">@size.Ec</option>
+                                }
+                            </InputSelect>
+                        </div>
+                        <div class="col">
+                            <InputSelect @bind-Value="storeItem.ColorId" class="form-control">
+                                <option value="0" selected disabled>Selecciona una talla</option>
+                                @foreach (var color in ColorService.MyColors)
+                                {
+                                    <option value="@color.Id.ToString()">@color.Name</option>
+                                }
+                            </InputSelect>
+                        </div>
+                        <div class="col">
+                            <InputNumber id="quantity"
+                             class="form-control"
+                             ParsingErrorMessage="Si no existe la cantidad escriba 0"
+                             @bind-Value="storeItem.Quantity" />
+                            <ValidationMessage For="@(()=>storeItem.Quantity)" />
+                        </div>
+                        <div class="col">
+                            <InputNumber id="price"
+                             class="form-control"
+                             ParsingErrorMessage="Si no existe el precio escriba 0"
+                             @bind-Value="storeItem.Price" />
+                            <ValidationMessage For="@(()=>storeItem.Price)" />
+                        </div>
+                        <div class="col">
+                            <InputCheckbox id="visible"
+                               @bind-Value="storeItem.Visible"
+                               style="transform:scale(1.5,1.5);" />
+                        </div>
+                        <div class="col"></div>
+                    </div>
+                }
+                <button type="button" class="btn btn-primary" @onclick="AddStoreInfo">
+                    <i class="bi bi-plus"></i> Añadir elemento a la tienda
+                </button>
+                <button type="submit" class="btn btn-primary">Guarda mi tienda</button>
+            </EditForm>
         }
     }
 </div>
@@ -73,12 +131,12 @@
         isProcessing = false;
     }
 
-    protected void addStoreInfo()
+    protected void AddStoreInfo()
     {
         product.Stores.Add(new Store { IsNew = true, ProductId = product.Id });
     }
 
-    protected void removeStoreInfo(int colorId, int sizeId)
+    protected void RemoveStoreInfo(int colorId, int sizeId)
     {
         var store = product.Stores.Find(s => s.ColorId == colorId && s.SizeId == sizeId);
 

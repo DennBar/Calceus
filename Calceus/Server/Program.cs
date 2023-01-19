@@ -34,6 +34,7 @@ builder.Services.AddSwaggerGen(c =>
         Type = SecuritySchemeType.ApiKey,
         BearerFormat = "jwt",
         In = ParameterLocation.Header,
+        Name= "Authentication",
         Description = "Api Token Here"
     });
     c.AddSecurityRequirement(new OpenApiSecurityRequirement

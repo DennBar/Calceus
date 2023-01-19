@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.Json.Serialization;
 
 namespace Calceus.Shared
 {
@@ -13,6 +14,7 @@ namespace Calceus.Shared
         public int Id { get; set; }
         public User? User { get; set; }        
         public int? UserId { get; set; }
+        [JsonIgnore]
         public Product? Product { get; set; }
         public int? ProductId { get; set; }
         public Size? Size { get; set; }

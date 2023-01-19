@@ -31,11 +31,11 @@
 
             Product product = null;
 
-            product = await _context.Products
+            product = await _context.Products                
                 .Include(p => p.Category)
                 .Include(p => p.Images)
                 .Include(p => p.Stores)
-                .FirstOrDefaultAsync(p => p.Id == productId && p.UserId == _authService.GetUserId());
+                .FirstOrDefaultAsync(p => p.Id == productId);
 
             if (product != null)
             {
