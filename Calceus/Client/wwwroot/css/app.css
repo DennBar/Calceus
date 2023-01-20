@@ -4,28 +4,6 @@ html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
-.aqua {
-    background-color: aliceblue
-}
-
-.windows {
-    display: block;
-}
-
-.mobile {
-    display: none !important;
-}
-
-@media(max-width:768px) {
-    .windows {
-        display: none;
-    }
-
-    .mobile {
-        display: block !important;
-    }
-}
-
 #blazor-error-ui {
     background: lightyellow;
     bottom: 0;
