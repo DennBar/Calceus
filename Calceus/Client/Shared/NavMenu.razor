@@ -3,16 +3,10 @@
 @inject ILocalStorageService LocalStorage
 
 <header>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <nav class="navbar navbar-expand-lg header navbar-dark bg-primary">
         <div class="container">
-            <a class="navbar-brand" href="/">Calceus</a>
-            <button class="navbar-toggler"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#navbarCalceus"
-                    aria-controls="navbarCalceus"
-                    aria-expanded="false"
-                    aria-label="Toggle navigation">
+            <a class="navbar-brand site-title" href="/">Calceus</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCalceus" aria-controls="navbarCalceus" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarCalceus">
@@ -20,16 +14,11 @@
                     <Authorized>
                         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle"
-                                   data-bs-toggle="dropdown"
-                                   href="#"
-                                   role="button"
-                                   aria-haspopup="true"
-                                   aria-expanded="false">
+                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
                                     <i class="bi bi-house-door-fill"></i> Admin
                                 </a>
                                 <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="admin/categories/1">Categorias</a>
+                                    <a class="dropdown-item" href="admin/categories/1">Categorías</a>
                                     <a class="dropdown-item" href="admin/sizes/1">Tallas</a>
                                 </div>
                             </li>
@@ -40,12 +29,7 @@
                     <Authorized>
                         <ul class="navbar-nav">
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle"
-                                   data-bs-toggle="dropdown"
-                                   href="#"
-                                   role="button"
-                                   aria-haspopup="true"
-                                   aria-expanded="false">
+                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
                                     <i class="bi bi-building"></i> Mi negocio
                                 </a>
                                 <div class="dropdown-menu">
@@ -57,57 +41,57 @@
                         </ul>
                     </Authorized>
                 </AuthorizeView>
+                <AuthorizeView Roles="customer">
+                    <Authorized>
+                        <form action="">
+                            <div class="form-group d-flex align-items-center">
+                                <input class="w-100" type="search" placeholder="Buscar artículo">
+                                <button class="my-color btn btn-secondary my-2 my-sm-0" type="submit">Buscar</button>
+                            </div>
+                        </form>
+                    </Authorized>
+                </AuthorizeView>
                 <AuthorizeView>
                     <Authorized>
                         <ul class="navbar-nav">
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle"
-                                   data-bs-toggle="dropdown"
-                                   href="#"
-                                   role="button"
-                                   aria-haspopup="true"
-                                   aria-expanded="false">
+                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
                                     <i class="bi bi-person-fill"></i> Usuarios
                                 </a>
-
                                 <div class="dropdown-menu">
                                     <a class="dropdown-item" href="profile">Mi perfil</a>
                                     <button class="dropdown-item" @onclick="LogoutHandler">Cerrar sesión</button>
                                 </div>
                             </li>
-                            <li>
-                                <form action="">
-                                    <div class="form-group d-flex align-items-center">
-                                        <input class="w-100" type="search" placeholder="Buscar artículo">
-                                        <button class="my-color btn btn-secondary my-2 my-sm-0" type="submit">Buscar</button>
-                                    </div>
-                                </form>
-                            </li>
                         </ul>
                     </Authorized>
                     <NotAuthorized>
                         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                            <li class="nav-item">
+                                <form action="" class="search-form">
+                                    <div class="form-group d-flex align-items-center">
+                                        <input class="w-100" type="search" placeholder="Buscar artículo">
+                                        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Buscar</button>
+                                    </div>
+                                </form>
+                            </li>
+                            <li class="nav-item d-flex align-items-center nav-items-group">
+                                <span class="cart-icon d-flex align-items-center">
+                                    <i class="bi bi-cart-fill"></i>
+                                    <small class="text-white">0</small>
+                                </span>
+                                <span class="d-flex align-items-center">
+                                    <span></span>
+                                </span>
+                            </li>
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle"
-                                   data-bs-toggle="dropdown"
-                                   href="#"
-                                   role="button"
-                                   aria-haspopup="true"
-                                   aria-expanded="false">
-                                    <i class="bi bi-person-fill"></i> Usuarios
+                                <a class="nav-link" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                                    <i class="bi bi-person-fill"></i>
                                 </a>
                                 <div class="dropdown-menu">
                                     <a class="dropdown-item" href="register">Regístrate</a>
                                     <a class="dropdown-item" href="login">Inicia sesión</a>
                                 </div>
-                            </li>
-                            <li>
-                                <form action="">
-                                    <div class="form-group d-flex align-items-center">
-                                        <input class="text-bg-dark w-100" type="search" placeholder="Buscar artículo">
-                                        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Buscar</button>
-                                    </div>
-                                </form>
                             </li>
                         </ul>
                     </NotAuthorized>
