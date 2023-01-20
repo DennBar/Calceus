@@ -23,20 +23,31 @@
             border: none;
         }
 
-.windows {
-    display: block;
+.nav-items-group .cart-icon {
+    margin: auto 2em;
+    position: relative;
 }
 
-.mobile {
-    display: none !important
+    .nav-items-group .cart-icon small {
+        position: absolute;
+        top: -10px;
+        right: -5px;
+    }
+
+.nav-items-group small {
+    font: 16px !important;
 }
 
 @media only screen and (max-width: 992px) {
-    .windows {
-        display: none;
+    .search-form {
+        margin: 20px auto;
     }
 
-    .mobile {
-        display: block !important
+        .search-form .form-group {
+            width: 95%;
+        }
+
+    .nav-items-group .cart-icon {
+        margin: auto 2em auto 0;
     }
 }
