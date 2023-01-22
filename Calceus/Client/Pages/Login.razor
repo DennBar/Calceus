@@ -9,7 +9,7 @@
 <div class="container">
     @if (isProcessing)
     {
-        <div class="my-lg-5 d-flex align-items-center justify-content-center">
+        <div class="my-lg-5 d-flex align-items-center justify-content-center vh-100">
             <div class="spinner-border text-primary"
              style="width: 3rem; height: 3rem;"
              role="status">
@@ -18,30 +18,45 @@
     }
     else
     {
-        <h3 class="py-2">Inicia Sesión</h3>
-        <EditForm Model="user" OnValidSubmit="LoginHandler">
-            <DataAnnotationsValidator />
-            <div class="mb-3">
-                <label for="email">Correo Electrónico</label>
-                <InputText id="email" @bind-Value="user.Email" class="form-control" />
-                <ValidationMessage For="@(()=>user.Email)" />
-            </div>
-            <div class="mb-3">
-                <label for="password">Contraseña</label>
-                <InputText id="password" @bind-Value="user.Password" class="form-control" type="password" />
-                <ValidationMessage For="@(()=>user.Password)" />
-            </div>
-            <button type="submit" class="btn btn-primary">Inicia Sesión</button>
-        </EditForm>
-        @if (errorMessage.Length > 0)
-        {
-            <div class="py-2">
-                <div class="alert alert-dismissible alert-danger">
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    <strong>@errorMessage</strong>
+        <div class="d-flex justify-content-center align-items-center mt-5">
+            <div class="bg-white p-5 rounded-5 text-secondary shadow">
+                <div class="d-flex justify-content-center">
+                    <img src="/images/shoemaker.jpg" style="height: 7rem" />
                 </div>
+                <div class="text-center fs-1 fw-bold">Calceus</div>
+                <EditForm Model="user" OnValidSubmit="LoginHandler">
+                    <DataAnnotationsValidator />
+                    <div class="input-group mt-4">
+                        <div class="input-group mt-3">
+                            <span class="input-group-text bg-primary"><i class="bi bi-envelope-fill" style="color:#fff"></i></span>
+                            <InputText id="email" placeholder="Correo electrónico" @bind-Value="user.Email" class="form-control" />
+                        </div>
+                        <ValidationMessage class="form-control" For="@(()=>user.Email)" />
+                        <div class="input-group mt-3">
+                            <div class="input-group">
+                                <span class="input-group-text bg-primary"><i class="bi bi-lock-fill" style="color:#fff"></i></span>
+                                <InputText id="password" placeholder="Contraseña" @bind-Value="user.Password" class="form-control" type="password" />
+                            </div>
+                            <ValidationMessage class="form-control" For="@(()=>user.Password)" />
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 mt-4 fw-semibold shadow-sm">Inicia Sesión</button>
+                </EditForm>
+                <div class="d-flex gap-1 justify-content-center mt-4">
+                    <div>¿No tienes una cuenta?</div>
+                    <a href="register" class="text-decoration-none text-info fw-semibold">Regístrate</a>
+                </div>
+                @if (errorMessage.Length > 0)
+                {
+                    <div class="py-2">
+                        <div class="alert alert-dismissible alert-danger">
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            <strong>@errorMessage</strong>
+                        </div>
+                    </div>
+                }
             </div>
-        }
+        </div>
     }
 </div>
 
