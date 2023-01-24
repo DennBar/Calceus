@@ -1,4 +1,12 @@
-﻿.home-banner {
+﻿.windows {
+    display: block;
+}
+
+.mobile {
+    display: none !important;
+}
+
+.home-banner {
     height: calc(100vh - 70px);
     overflow: hidden;
     display: flex;
@@ -29,42 +37,97 @@
             color: orangered;
         }
 
-    .banner .banner-image {
+    .banner .banner-container {
+        position: relative;
+    }
+
+    .banner .banner-image img {
         display: grid;
         align-content: flex-end;
+        max-width: 100%;
+        width: 100%;
+        height: auto !important;
     }
 
-.home-banner .sidebar {
-    width: 100%;
-    max-width: 340px;
-    margin-top: 30px;
+.popular-products-categories h3 {
+    text-align: center;
+    font-size: 3em;
 }
 
-.home-banner .sider .sidebar-inner {
-    border-top-left-radius: 15px;
-    min-height: 70vh;
-    position: relative;
-}
-
-.home-banner .siderbar .sidebar-inner ul {
+.popular-products-categories ul {
     list-style-type: none;
-    padding-inline-start: 0;
+    padding-inline-end: 0;
+    text-align: center;
+    display: flex;
+    justify-content: center;
 }
 
-.home-banner .sidebar .sidebar-inner ul li {
-    margin: 10px 0;
-}
-
-    .home-banner .sidebar .sidebar-inner ul li a {
-        font-weight: 600;
+    .popular-products-categories ul li {
+        margin-left: 10px;
     }
 
-.mobile {
-    display: none !important;
+        .popular-products-categories ul li span {
+            margin-left: 10px;
+        }
+
+.popular-products-grid .card {
+    width: 85%;
+    margin: 0 auto;
 }
+
+.popular-products-grid .product-image {
+    padding: 10px 30px;
+    display: flex;
+    justify-content: center;
+}
+
+    .popular-products-grid .product-image img {
+        max-height: 224px;
+    }
+
+.popular-products-grid h6 {
+    font-weight: bold;
+    font-size: 30px;
+}
+
+.popular-products-grid .product-details p {
+    width: 80%;
+}
+
+@media only screen and (max-width: 992px) {
+    .windows {
+        display: none;
+    }
 
 @media(max-width:992px) {
     .mobile {
         display: block !important;
     }
+
+    .banner {
+        padding: 20px;
+    }
+
+        .banner .banner-inner h3 {
+            font-size: 3.6em;
+        }
+
+        .banner .banner-inner {
+            margin-top: 5vh;
+            margin-bottom: 3vh;
+        }
+
+        .banner .banner-image img{
+            display: grid;
+            align-content: flex-end;
+            max-width: 100%;
+        }
+
+    .popular-products-categories ul li {
+        margin: 0 0;
+    }
+
+        .popular-products-categories ul li span {
+            display: none;
+        }
 }
