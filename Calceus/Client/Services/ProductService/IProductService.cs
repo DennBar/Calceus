@@ -8,7 +8,7 @@
         int PageIndex { get; set; }
         int PageCount { get; set; }
         Task GetMyProducts(int page);
-        Task<ServiceResponse<Product>> GetMyProductById(int productId);
+        Task<ServiceResponse<Product>> GetProductById(int productId);
         Task GetAllProducts(string? categoryUrl = null);
         Task<string> AddProduct(Product product);
         Task<string> UpdateProduct(Product product);

@@ -1,27 +1,103 @@
-﻿@page "/product/test"
+﻿@page "/product/{id:int}"
+@inject IProductService ProductService
 
-<div class="container">
-    <div class="card">
-        <div class="container-fluid">
-            <div class="wrapper row">
-                <div class="preview col-md-6">
-                    <img src="/images/shoes.png" />
+<PageTitle>Detalle del producto</PageTitle>
+
+<div class="container my-5">
+    @if (isProcessing)
+    {
+        <div class="my-lg-5 d-flex align-items-center justify-content-center">
+            <div class="spinner-border text-primary"
+             style="width: 3rem; height: 3rem;"
+             role="status">
+            </div>
+        </div>
+    }
+    else
+    {
+        @if (errorMessage.Length > 0)
+        {
+            <div class="py-2">
+                <div class="alert alert-dismissible alert-danger">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    <strong>@errorMessage</strong>
                 </div>
-                <div details col-md-6>
-                    <h3 class="product-name">Name</h3>
-                    <p class="product-description">lorem lorem lorem lorem lorem lorem</p>
-                    <h4 class="price">Precio: <span>$180</span></h4>
-                    <h5 class="sizes"> Tallas: <span>talla</span> </h5>
-                    <h5 class="colors">Colores: <span class=""></span></h5>
-                    <div class="action">
-                        <button class="btn btn-primary add-to-cart">Añadir al carro</button>
+            </div>
+        }
+        else
+        {
+            <div class="card">
+                <div class="container-fluid">
+                    <div class="wrapper row">
+                        <div class="col-md-6">
+                            <img src="@product.Images[0].Data" alt="@product.Name" />
+                        </div>
+                        <div class="details col-md-6">
+                            <h3 class="product-name fw-bold">@product.Name</h3>
+                            <p class="product-description">@product.Description</p>
+                            @if (product.Stores != null && product.Stores.Count > 0)
+                            {
+                                <div class="mb-3">
+                                    <select class="form-select" @bind="currentStoreId">
+                                        @foreach (var store in product.Stores)
+                                        {
+                                            <option value="@store.Id">@store.Size.Ec</option>
+                                        }
+                                    </select>
+                                </div>
+                            }
+                            @if (GetSelectedStoreData() != null)
+                            {
+                                <h5 class="price">Color: <span>$ @GetSelectedStoreData().Color.Name</span></h5>
+                                <h5 class="price">Precio: <span>$ @GetSelectedStoreData().Price</span></h5>
+                            }
+                            <div class="action">
+                                <button class="btn btn-primary add-to-cart">Añadir al carro</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
+        }
+    }
 </div>
 
 @code {
+    [Parameter]
+    public int Id { get; set; }
 
+    Product product = new Product();
+
+    bool isProcessing { get; set; } = false;
+    string errorMessage { get; set; } = string.Empty;
+    int currentStoreId { get; set; } = 1;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        isProcessing = true;
+
+        Product _product = (await ProductService.GetProductById(Id)).Data;
+
+        if (_product == null)
+        {
+            errorMessage = "$Producto no encontrado";
+            return;
+        }
+        else
+        {
+            product = _product;
+            if (product.Stores.Count > 0)
+            {
+                currentStoreId = product.Stores[0].Id;
+            }
+        }
+
+        isProcessing = false;
+    }
+
+    private Store GetSelectedStoreData()
+    {
+        var store = product.Stores.FirstOrDefault(s => s.Id == currentStoreId);
+        return store;
+    }
 }

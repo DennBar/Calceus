@@ -1,4 +1,6 @@
-﻿namespace Calceus.Server.Services.ProductService
+﻿using System.Linq;
+
+namespace Calceus.Server.Services.ProductService
 {
     public class ProductService : IProductService
     {
@@ -25,17 +27,21 @@
             };
         }
 
-        public async Task<ServiceResponse<Product>> GetMyProductById(int productId)
+        public async Task<ServiceResponse<Product>> GetProductById(int productId)
         {
             var response = new ServiceResponse<Product>();
 
             Product product = null;
 
             product = await _context.Products
+                .Where(p => p.Id == productId)
                 .Include(p => p.Category)
                 .Include(p => p.Images)
                 .Include(p => p.Stores)
-                .FirstOrDefaultAsync(p => p.Id == productId);
+                .ThenInclude(p => p.Size)
+                .Include(p => p.Stores)
+                .ThenInclude(p => p.Color)
+                .FirstOrDefaultAsync();
 
             if (product != null)
             {

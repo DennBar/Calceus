@@ -114,7 +114,7 @@
         }
         else
         {
-            Product _product = (await ProductService.GetMyProductById(Id)).Data;
+            Product _product = (await ProductService.GetProductById(Id)).Data;
 
             if (_product == null)
             {

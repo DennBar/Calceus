@@ -25,9 +25,9 @@ namespace Calceus.Server.Controllers
         }
 
         [HttpGet("{productId}")]
-        public async Task<ActionResult<ServiceResponse<Product>>> GetMyProductById(int productId)
+        public async Task<ActionResult<ServiceResponse<Product>>> GetProductById(int productId)
         {
-            var response = await _productService.GetMyProductById(productId);
+            var response = await _productService.GetProductById(productId);
 
             return Ok(response);
         }

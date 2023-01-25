@@ -46,7 +46,7 @@
             ProductChanged.Invoke();
         }
 
-        public async Task<ServiceResponse<Product>> GetMyProductById(int productId)
+        public async Task<ServiceResponse<Product>> GetProductById(int productId)
         {
             var response = await _http.GetFromJsonAsync<ServiceResponse<Product>>($"api/product/{productId}");
 
