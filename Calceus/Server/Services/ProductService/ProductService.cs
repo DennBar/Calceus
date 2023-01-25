@@ -31,7 +31,7 @@
 
             Product product = null;
 
-            product = await _context.Products                
+            product = await _context.Products
                 .Include(p => p.Category)
                 .Include(p => p.Images)
                 .Include(p => p.Stores)
@@ -151,6 +151,39 @@
             {
                 Data = response
             };
+        }
+
+        public async Task<ServiceResponse<List<Product>>> GetProductsByCategory(string categoryUrl)
+        {
+            var products = await _context.Products
+                .Where(p => p.Category.Url.ToLower().Equals(categoryUrl.ToLower()))
+                .Include(p => p.Category)
+                .Include(p => p.Stores)
+                .Include(p => p.Images)
+                .ToListAsync();
+
+            var response = new ServiceResponse<List<Product>>
+            {
+                Data = products
+            };
+
+            return response;
+        }
+
+        public async Task<ServiceResponse<List<Product>>> GetAllProducts()
+        {
+            var products = await _context.Products
+               .Include(p => p.Category)
+               .Include(p => p.Stores)
+               .Include(p => p.Images)
+               .ToListAsync();
+
+            var response = new ServiceResponse<List<Product>>
+            {
+                Data = products
+            };
+
+            return response;
         }
     }
 }

@@ -12,6 +12,7 @@
         }
 
         public List<Product> MyProducts { get; set; } = new List<Product>();
+        public List<Product> Products { get; set; } = new List<Product>();
         public int PageIndex { get; set; } = 1;
         public int PageCount { get; set; } = 0;
 
@@ -29,6 +30,20 @@
             {
                 return "login";
             }
+        }
+
+        public async Task GetAllProducts(string? categoryUrl = null)
+        {
+            var response = categoryUrl == null ?
+                await _http.GetFromJsonAsync<ServiceResponse<List<Product>>>("api/product") :
+                await _http.GetFromJsonAsync<ServiceResponse<List<Product>>>($"api/product/category/{categoryUrl}");
+
+            if (response != null && response.Data != null)
+            {
+                Products = response.Data;
+            }
+
+            ProductChanged.Invoke();
         }
 
         public async Task<ServiceResponse<Product>> GetMyProductById(int productId)

@@ -123,9 +123,9 @@
                 max-width: 100%;
             }
 
-        .popular-products-categories ul li {
-            margin: 0 0;
-        }
+    .popular-products-categories ul li {
+        margin: 0 10px;
+    }
 
             .popular-products-categories ul li span {
                 display: none;
