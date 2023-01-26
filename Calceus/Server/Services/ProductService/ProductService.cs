@@ -36,11 +36,7 @@ namespace Calceus.Server.Services.ProductService
             product = await _context.Products
                 .Where(p => p.Id == productId)
                 .Include(p => p.Category)
-                .Include(p => p.Images)
-                .Include(p => p.Stores)
-                .ThenInclude(p => p.Size)
-                .Include(p => p.Stores)
-                .ThenInclude(p => p.Color)
+                .Include(p => p.Images)                
                 .FirstOrDefaultAsync();
 
             if (product != null)

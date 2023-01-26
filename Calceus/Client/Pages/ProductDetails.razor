@@ -1,5 +1,6 @@
 ﻿@page "/product/{id:int}"
 @inject IProductService ProductService
+@inject IStoreService StoreService
 
 <PageTitle>Detalle del producto</PageTitle>
 
@@ -32,7 +33,7 @@
                         <div class="col-md-6">
                             <img src="@product.Images[0].Data" alt="@product.Name" />
                         </div>
-                        <div class="details col-md-6">
+                        @*<div class="details col-md-6">
                             <h3 class="product-name fw-bold">@product.Name</h3>
                             <p class="product-description">@product.Description</p>
                             @if (product.Stores != null && product.Stores.Count > 0)
@@ -54,9 +55,15 @@
                             <div class="action">
                                 <button class="btn btn-primary add-to-cart">Añadir al carro</button>
                             </div>
-                        </div>
+                        </div>*@
                     </div>
                 </div>
+            </div>
+            <div>
+                @foreach (var item in StoreService.Stores)
+                {
+                    <h3>@item.Price</h3>
+                }
             </div>
         }
     }
@@ -78,6 +85,8 @@
 
         Product _product = (await ProductService.GetProductById(Id)).Data;
 
+        await StoreService.GetStoreByProductIdGroupBySize(Id);
+        
         if (_product == null)
         {
             errorMessage = "$Producto no encontrado";

@@ -6,6 +6,7 @@ global using Calceus.Server.Services.SizeService;
 global using Calceus.Server.Services.ColorService;
 global using Calceus.Server.Services.AuthService;
 global using Calceus.Server.Services.RoleService;
+global using Calceus.Server.Services.StoreService;
 global using Calceus.Server.Services.ProductService;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.ResponseCompression;
@@ -57,6 +58,7 @@ builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<ISizeService, SizeService>();
 builder.Services.AddScoped<IColorService, ColorService>();
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IStoreService, StoreService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
