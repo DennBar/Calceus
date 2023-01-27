@@ -1,6 +1,4 @@
-﻿using MudBlazor;
-
-namespace Calceus.Client.Services.StoreService
+﻿namespace Calceus.Client.Services.StoreService
 {
     public class StoreService : IStoreService
     {
@@ -11,17 +9,16 @@ namespace Calceus.Client.Services.StoreService
             _http = http;
         }
 
+        public List<StoreResponse> Stores { get; set; }
         public int SizeId { get; set; }
-        public IEnumerable<Store> Stores { get; set; }
 
         public async Task GetStoreByProductIdGroupBySize(int productId)
         {
-            var response = await _http.GetFromJsonAsync<StoreResponse>($"api/store/product/{productId}");
+            var response = await _http.GetFromJsonAsync<ServiceResponse<List<StoreResponse>>>($"api/store/product/{productId}");
 
-            if (response != null)
-            {
-                SizeId = response.SizeId;
-                Stores = response.Stores;
+            if (response != null && response.Data != null)
+            {               
+                Stores = response.Data;
             }
         }
     }

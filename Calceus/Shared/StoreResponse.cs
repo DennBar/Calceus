@@ -8,7 +8,7 @@ namespace Calceus.Shared
 {
     public class StoreResponse
     {
-        public int SizeId { get; set; }
-        public IEnumerable<Store> Stores { get; set; }
+        public decimal SizeId { get; set; }
+        public List<Store> Stores { get; set; } = new List<Store>();
     }
 }

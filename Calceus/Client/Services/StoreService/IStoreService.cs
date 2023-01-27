@@ -2,8 +2,8 @@
 {
     public interface IStoreService
     {
-        IEnumerable<Store> Stores { get; set; }
         int SizeId { get; set; }
+        List<StoreResponse> Stores { get; set; }
         Task GetStoreByProductIdGroupBySize(int productId);
     }
 }
