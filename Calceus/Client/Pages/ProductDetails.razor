@@ -37,7 +37,7 @@
                             <h3 class="product-name fw-bold">@product.Name</h3>
                             <p class="product-description">@product.Description</p>
 
-                            <select class="form-select" @bind="currentSizeId">
+                            <select class="form-select" @bind="@currentSize">
                                 @foreach (var store in StoreService.Stores)
                                 {
                                     <option value="@store.SizeId">@store.SizeId</option>
@@ -45,15 +45,17 @@
                             </select>
                             @foreach (var storeData in GetSelectedStoreData())
                             {
-                                <select class="form-select">
+                                <select class="form-select" @bind="@currentStore">
                                     @for (int i = 0; i < storeData.Stores.Count; i++)
                                     {
-                                        <option value="@storeData.Stores[i].Id">@storeData.Stores[i].Color.Name</option>
+                                        <option value="@i">@storeData.Stores[i].Color.Name</option>
                                     }
                                 </select>
                             }
                             <div class="action">
-                                <button class="btn btn-primary add-to-cart">Añadir al carro</button>
+                                <button class="btn btn-primary add-to-cart" @onclick="AddToCart">
+                                    Añadir al carro
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -72,7 +74,9 @@
 
     bool isProcessing { get; set; } = false;
     string errorMessage { get; set; } = string.Empty;
-    decimal currentSizeId { get; set; } = 0;
+    decimal currentSize { get; set; } = 0;
+    int currentStore { get; set; } = 0;
+    Store currentStoreData = new Store();
 
     protected override async Task OnParametersSetAsync()
     {
@@ -91,7 +95,7 @@
 
             await StoreService.GetStoreByProductIdGroupBySize(Id);
 
-            currentSizeId = StoreService.SizeId;
+            currentSize = StoreService.SizeId;
         }
 
         isProcessing = false;
@@ -99,8 +103,22 @@
 
     private List<StoreResponse> GetSelectedStoreData()
     {
-        var storeData = StoreService.Stores.Where(s => s.SizeId == currentSizeId).ToList();
+        var storeData = StoreService.Stores.Where(s => s.SizeId == currentSize).ToList();
 
         return storeData;
+    }
+
+    private Store GetSelectedStore()
+    {
+        var store = GetSelectedStoreData()[0].Stores[currentStore];
+
+        return store;
+    }
+
+    private void AddToCart()
+    {
+        Console.WriteLine(currentSize);
+        Console.WriteLine(currentStore);
+        Console.WriteLine(GetSelectedStore().Color.Name);
     }
 }
