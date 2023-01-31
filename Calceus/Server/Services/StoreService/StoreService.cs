@@ -14,15 +14,15 @@
             var response = _context.Stores
                 .Where(p => p.ProductId == productId)
                 .Include(p => p.Color)
-                .Include(p => p.Size)
+                .Include(p => p.Size)                
                 .GroupBy(g => g.Size.Ec)
                 .ToList()
                 .Select(s => new StoreResponse
                 {
-                    SizeId = s.Key,
-                    Stores = s.Select(y => y).ToList(),
+                    SizeEc = s.Key,
+                    StoreList = s.Select(y => y).ToList(),
                 })
-                .OrderBy(e => e.SizeId).ToList();
+                .OrderBy(e => e.SizeEc).ToList();
 
 
             return new ServiceResponse<List<StoreResponse>>

@@ -18,7 +18,7 @@
 
             if (response != null && response.Data != null)
             {               
-                Stores = response.Data;
+                Stores = response.Data;               
             }
         }
     }
