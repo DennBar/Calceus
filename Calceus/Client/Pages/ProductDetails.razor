@@ -37,21 +37,35 @@
                             <h3 class="product-name fw-bold">@product.Name</h3>
                             <p class="product-description">@product.Description</p>
 
-                            <select class="form-select" @bind="@currentSize">
-                                @foreach (var store in StoreService.Stores)
+                            <select class="form-select" @onchange="SizeIdChanged">
+                               <option value="0" selected disabled>select</option>
+                                @for (int i = 1; i <= StoreService.Stores.Count; i++)
                                 {
-                                    <option value="@store.SizeId">@store.SizeId</option>
+                                    <option value="@(i-1)">@StoreService.Stores[i-1].SizeId</option>
                                 }
                             </select>
-                            @foreach (var storeData in GetSelectedStoreData())
+
+                            <select class="form-select" @onchange="ColorIdChanged">
+                                <option value="0" selected disabled>select</option>
+                                @foreach (var store in currentStoreData)
+                                {
+                                    <option value="@store.ColorId">@store.Color.Name</option>
+                                }
+                            </select>
+
+                            @if (currentStore != null)
                             {
-                                <select class="form-select" @bind="@currentStore">
-                                    @for (int i = 0; i < storeData.Stores.Count; i++)
-                                    {
-                                        <option value="@i">@storeData.Stores[i].Color.Name</option>
-                                    }
-                                </select>
+                               <input disabled @bind-value="currentStore.Price"/>
                             }
+                            @*@foreach (var storeData in GetSelectedStoreData())
+                    {
+                    <select class="form-select" @bind="@currentStore">
+                    @for (int i = 0; i < storeData.Stores.Count; i++)
+                    {
+                    <option value="@i">@storeData.Stores[i].Color.Name</option>
+                    }
+                    </select>
+                    }*@
                             <div class="action">
                                 <button class="btn btn-primary add-to-cart" @onclick="AddToCart">
                                     Añadir al carro
@@ -73,10 +87,9 @@
     Product product = new Product();
 
     bool isProcessing { get; set; } = false;
-    string errorMessage { get; set; } = string.Empty;
-    decimal currentSize { get; set; } = 0;
-    int currentStore { get; set; } = 0;
-    Store currentStoreData = new Store();
+    string errorMessage { get; set; } = string.Empty;    
+    List<Store> currentStoreData = new List<Store>();
+    Store currentStore = new Store();
 
     protected override async Task OnParametersSetAsync()
     {
@@ -93,32 +106,43 @@
         {
             product = _product;
 
-            await StoreService.GetStoreByProductIdGroupBySize(Id);
-
-            currentSize = StoreService.SizeId;
+            await StoreService.GetStoreByProductIdGroupBySize(Id);           
         }
 
         isProcessing = false;
     }
 
-    private List<StoreResponse> GetSelectedStoreData()
+    private void SizeIdChanged(ChangeEventArgs e)
     {
-        var storeData = StoreService.Stores.Where(s => s.SizeId == currentSize).ToList();
-
-        return storeData;
+        //if (Convert.ToDecimal(e.Value.ToString()) > 0)
+        //{
+        //currentSize = Convert.ToDecimal(e.Value.ToString());
+        currentStoreData = StoreService.Stores[Convert.ToInt32(e.Value.ToString())].Stores.ToList();
+        //}
     }
 
-    private Store GetSelectedStore()
+    private void ColorIdChanged(ChangeEventArgs e)
     {
-        var store = GetSelectedStoreData()[0].Stores[currentStore];
-
-        return store;
+        currentStore = currentStoreData.Where(s => s.ColorId == Convert.ToInt32(e.Value.ToString())).FirstOrDefault();
+        
     }
+
+    //private List<StoreResponse> GetSelectedStoreData()
+    //{
+    //    var storeData = StoreService.Stores.Where(s => s.SizeId == currentSize).ToList();
+
+    //    return storeData;
+    //}
+
+    //private Store GetSelectedStore()
+    //{
+    //    var store = GetSelectedStoreData()[0].Stores[currentStore];
+
+    //    return store;
+    //}
 
     private void AddToCart()
-    {
-        Console.WriteLine(currentSize);
-        Console.WriteLine(currentStore);
-        Console.WriteLine(GetSelectedStore().Color.Name);
+    {               
+        Console.WriteLine(currentStore.Price);        
     }
 }
