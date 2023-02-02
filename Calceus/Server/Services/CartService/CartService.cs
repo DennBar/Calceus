@@ -64,7 +64,29 @@
                     s.SizeId == cartItem.SizeId &&
                     s.ColorId == cartItem.ColorId)
                     .FirstOrDefaultAsync();
+
+                if (store == null)
+                {
+                    continue;
+                }
+
+                var cartProduct = new CartResponse
+                {
+                    ProductId = product.Id,
+                    Title = product.Name,
+                    ImageUrl = product.Images[0].Data,
+                    Price = store.Price,
+                    SizeId = store.SizeId,
+                    Size = store.Size.Ec,
+                    ColorId = store.ColorId,
+                    Color = store.Color.Name,
+                    Quantity = store.Quantity,
+                };
+
+                response.Data.Add(cartProduct);
             }
+
+            return response;
         }
 
         public Task<ServiceResponse<List<CartResponse>>> GetCartProductsByDb(int? userId = null)

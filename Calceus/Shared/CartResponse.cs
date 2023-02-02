@@ -11,7 +11,7 @@ namespace Calceus.Shared
         public int ProductId { get; set; }
         public string Title { get; set; } = string.Empty;
         public int SizeId { get; set; }
-        public string Size { get; set; } = string.Empty;
+        public decimal Size { get; set; }
         public int ColorId { get; set; }
         public string Color { get; set; } = string.Empty;
         public string ImageUrl { get; set; } = string.Empty;
