@@ -89,24 +89,77 @@
             return response;
         }
 
-        public Task<ServiceResponse<List<CartResponse>>> GetCartProductsByDb(int? userId = null)
+        public async Task<ServiceResponse<List<CartResponse>>> GetCartProductsByDb(int? userId = null)
         {
-            throw new NotImplementedException();
+            if (userId == null)
+            {
+                userId = _authService.GetUserId();
+            }
+
+            return await GetCartProducts(await _context.Carts
+                .Where(c => c.UserId == userId)
+                .ToListAsync());
         }
 
-        public Task<ServiceResponse<bool>> RemoveItemFromCart(int productId, int sizeId, int colorId)
+        public async Task<ServiceResponse<bool>> RemoveItemFromCart(int productId, int sizeId, int colorId)
         {
-            throw new NotImplementedException();
+            var response = await _context.Carts.
+                FirstOrDefaultAsync(c => c.ProductId == productId &&
+                c.SizeId == sizeId &&
+                c.ColorId == colorId &&
+                c.UserId == _authService.GetUserId());
+
+            if (response == null)
+            {
+                return new ServiceResponse<bool>
+                {
+                    Data = false,
+                    Success = false,
+                    Message = "No existen productos en el carrito"
+                };
+            }
+
+            _context.Carts.Remove(response);
+
+            await _context.SaveChangesAsync();
+
+            return new ServiceResponse<bool> { Data = true };
         }
 
-        public Task<ServiceResponse<List<CartResponse>>> StoreCartItems(List<Cart> cart)
+        public async Task<ServiceResponse<List<CartResponse>>> StoreCartItems(List<Cart> cart)
         {
-            throw new NotImplementedException();
+            cart.ForEach(cartItem => cartItem.UserId = _authService.GetUserId());
+
+            _context.Carts.AddRange(cart);
+
+            await _context.SaveChangesAsync();
+
+            return await GetCartProductsByDb();
         }
 
-        public Task<ServiceResponse<bool>> UpdateQuantity(Cart cartItem)
+        public async Task<ServiceResponse<bool>> UpdateQuantity(Cart cartItem)
         {
-            throw new NotImplementedException();
+            var response = await _context.Carts
+                 .FirstOrDefaultAsync(c => c.ProductId == cartItem.ProductId &&
+                 c.SizeId == cartItem.SizeId &&
+                 c.ColorId == cartItem.ColorId &&
+                 c.UserId == _authService.GetUserId());
+
+            if (response == null)
+            {
+                return new ServiceResponse<bool>
+                {
+                    Data = false,
+                    Success = false,
+                    Message = "No existe este producto en el carrito"
+                };
+            }
+
+            response.Quantity = cartItem.Quantity;
+
+            await _context.SaveChangesAsync();
+
+            return new ServiceResponse<bool> { Data = true };
         }
     }
 }
