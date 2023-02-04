@@ -1,6 +1,7 @@
 ﻿@page "/product/{id:int}"
 @inject IProductService ProductService
 @inject IStoreService StoreService
+@inject ICartService CartService
 
 <PageTitle>Detalle del producto</PageTitle>
 
@@ -16,66 +17,80 @@
     }
     else
     {
-        @if (errorMessage.Length > 0)
+        @if (mainErrorMessage.Length > 0)
         {
             <div class="py-2">
                 <div class="alert alert-dismissible alert-danger">
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    <strong>@errorMessage</strong>
+                    <strong>@mainErrorMessage</strong>
                 </div>
             </div>
         }
         else
         {
-            <div class="card">
+            <div class="card p-3 bg-opacity-50">
                 <div class="container-fluid">
-                    <div class="wrapper row">
-                        <div class="col-md-6">
-                            <img src="@product.Images[0].Data" alt="@product.Name" />
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <img class="mx-auto d-block" src="@product.Images[0].Data" alt="@product.Name" />
                         </div>
-                        <div class="details col-md-6">
-                            <h3 class="product-name fw-bold">@product.Name</h3>
-                            <p class="product-description">@product.Description</p>
+                        <div class="col-md-6">
+                            <h3 class="fw-bold">@product.Name</h3>
+                            <p class="mt-4">@product.Description</p>
+                            <div class="input-group mt-4">
+                                <div class="input-group mt-3">
+                                    <span class="input-group-text bg-primary"><i class="bi bi-rulers" style="color:#fff"></i></span>
+                                    <select class="form-select" @bind="SelectedSizeEc">
+                                        <option value="0" selected disabled>select</option>
+                                        @for (int i = 1; i <= StoreService.Stores.Count; i++)
+                                        {
+                                            <option value="@i">@StoreService.Stores[i-1].SizeEc</option>
+                                        }
+                                    </select>
+                                </div>
 
-                            <select class="form-select" @bind="SelectedSizeEc">
-                                <option value="0" selected disabled>select</option>
-
-                                @for (int i = 1; i <= StoreService.Stores.Count; i++)
+                                @if (SelectedSizeEc != default)
                                 {
-                                    <option value="@i">@StoreService.Stores[i-1].SizeEc</option>
-                                }
-                            </select>
+                                    currentStoreList = StoreService.Stores[SelectedSizeEc - 1].StoreList.ToList();
 
-                            @if (SelectedSizeEc != default)
-                            {
-                                currentStoreList = StoreService.Stores[SelectedSizeEc - 1].StoreList.ToList();
+                                    <div class="input-group mt-3">
+                                        <span class="input-group-text bg-primary"><i class="bi bi-palette-fill" style="color:#fff"></i></span>
+                                        <select class="form-select" @bind="SelectedColorId">
+                                            <option value="0" selected disabled>select</option>
+                                            @foreach (var store in currentStoreList)
+                                            {
+                                                <option value="@store.ColorId">@store.Color.Name</option>
+                                            }
+                                        </select>
+                                    </div>
 
+                                    currentStore = currentStoreList.FirstOrDefault(s => s.ColorId == SelectedColorId);
 
-                                <select class="form-select" @bind="SelectedColorId">
-                                    <option value="@(0)" selected disabled>select</option>
-                                    @foreach (var store in currentStoreList)
+                                    @if (currentStore != null)
                                     {
-                                        <option value="@store.ColorId">@store.Color.Name</option>
+                                        <div class="input-group mt-3">
+                                            <span class="input-group-text bg-primary"><i class="bi bi-currency-dollar" style="color:#fff"></i></span>
+                                            <input type="text" disabled class="form-control" @bind="currentStore.Price" aria-label="Amount (to the nearest dollar)">
+                                        </div>
                                     }
-                                </select>
-
-                                currentStore = currentStoreList.FirstOrDefault(s => s.ColorId == SelectedColorId);
-
-                                @if (currentStore != null)
-                                {
-                                    <h3>@currentStore.Price</h3>
                                 }
-                            }
-                            <div class="action">
-                                <button class="btn btn-primary add-to-cart" @onclick="AddToCart">
-                                    Añadir al carro
-                                </button>
                             </div>
+                            <button class="btn btn-primary w-100 mt-4 fw-semibold shadow-sm" @onclick="AddToCart">
+                                Añadir al carro
+                            </button>
+                            @if (secondaryErrorMessage.Length > 0)
+                            {
+                                <div class="py-2">
+                                    <div class="alert alert-dismissible alert-danger">
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                        <strong>@secondaryErrorMessage</strong>
+                                    </div>
+                                </div>
+                            }
                         </div>
                     </div>
                 </div>
             </div>
-
         }
     }
 </div>
@@ -87,7 +102,8 @@
     Product product = new Product();
 
     bool isProcessing { get; set; } = false;
-    string errorMessage { get; set; } = string.Empty;
+    string mainErrorMessage { get; set; } = string.Empty;
+    string secondaryErrorMessage { get; set; } = string.Empty;
     int InitialSizeEc;
     int SelectedSizeEc
     {
@@ -110,7 +126,7 @@
 
         if (_product == null)
         {
-            errorMessage = "Producto no encontrado";
+            mainErrorMessage = "Producto no encontrado";
             return;
         }
         else
@@ -121,18 +137,24 @@
         }
 
         isProcessing = false;
-    }    
+    }
 
-    private void AddToCart()
+    private async Task AddToCart()
     {
-        Console.WriteLine(currentStoreList.Count);
         if (currentStoreList.Count > 0 && currentStore != null)
         {
-            Console.WriteLine(currentStore.Price);
+            var cartItem = new Cart
+                {
+                    ProductId = product.Id,
+                    SizeId = currentStore.SizeId,
+                    ColorId = currentStore.ColorId,
+                };
+
+            await CartService.AddToCart(cartItem);
         }
         else
         {
-            Console.WriteLine("Escoge oe");
+            secondaryErrorMessage = "Debes seleccionar una talla y un color para continuar";
         }
     }
 }

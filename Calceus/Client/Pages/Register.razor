@@ -30,22 +30,19 @@
                             <InputText id="email" placeholder="Correo electrónico" @bind-Value="user.Email" class="form-control" />
                         </div>
                         <ValidationMessage For="@(()=>user.Email)" />
-                    </div>
-                    <div class="input-group mt-4">
+
                         <div class="input-group mt-3">
                             <span class="input-group-text bg-primary"><i class="bi bi-lock-fill" style="color:#fff"></i></span>
                             <InputText id="password" placeholder="Contraseña" @bind-Value="user.Password" class="form-control" type="password" />
                         </div>
                         <ValidationMessage For="@(()=>user.Password)" />
-                    </div>
-                    <div class="input-group mt-4">
+
                         <div class="input-group mt-3">
                             <span class="input-group-text bg-primary"><i class="bi bi-lock-fill" style="color:#fff"></i></span>
                             <InputText id="confirmPassword" placeholder="Confirmar contraseña" @bind-Value="user.ConfirmPassword" class="form-control" type="password" />
                         </div>
                         <ValidationMessage For="@(()=>user.ConfirmPassword)" />
-                    </div>
-                    <div class="input-group mt-4">
+
                         <div class="input-group mt-3">
                             <span class="input-group-text bg-primary"><i class="bi bi-person-fill" style="color:#fff"></i></span>
                             <InputSelect id="role" @bind-Value="user.RoleId" class="form-select">

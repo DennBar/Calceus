@@ -8,6 +8,7 @@ namespace Calceus.Shared
 {
     public class Cart
     {
+        public int Id { get; set; }
         public int UserId { get; set; }
         public int ProductId { get; set; }
         public int SizeId { get; set; }
