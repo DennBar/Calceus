@@ -15,7 +15,7 @@ namespace Calceus.Server.Controllers
         }
 
         [HttpPost("products")]
-        public async Task<ActionResult<ServiceResponse<List<CartResponse>>>> GetCartProducts(List<Cart> cartItems)
+        public async Task<ActionResult<ServiceResponse<List<CartResponse>>>> GetCartProducts(List<CartItem> cartItems)
         {
             var response = await _cartService.GetCartProducts(cartItems);
 

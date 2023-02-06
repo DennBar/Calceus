@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Calceus.Shared
 {
-    public class Cart
+    public class CartItem
     {
         public int Id { get; set; }
         public int UserId { get; set; }

@@ -11,7 +11,7 @@
             _authService = authService;
         }
 
-        public async Task<ServiceResponse<bool>> AddToCart(Cart cartItem)
+        public async Task<ServiceResponse<bool>> AddToCart(CartItem cartItem)
         {
             cartItem.UserId = _authService.GetUserId();
 
@@ -41,7 +41,7 @@
             return new ServiceResponse<int> { Data = count };
         }
 
-        public async Task<ServiceResponse<List<CartResponse>>> GetCartProducts(List<Cart> cart)
+        public async Task<ServiceResponse<List<CartResponse>>> GetCartProducts(List<CartItem> cart)
         {
             var response = new ServiceResponse<List<CartResponse>>
             {
@@ -129,7 +129,7 @@
             return new ServiceResponse<bool> { Data = true };
         }
 
-        public async Task<ServiceResponse<List<CartResponse>>> StoreCartItems(List<Cart> cart)
+        public async Task<ServiceResponse<List<CartResponse>>> StoreCartItems(List<CartItem> cart)
         {
             cart.ForEach(cartItem => cartItem.UserId = _authService.GetUserId());
 
@@ -140,7 +140,7 @@
             return await GetCartProductsByDb();
         }
 
-        public async Task<ServiceResponse<bool>> UpdateQuantity(Cart cartItem)
+        public async Task<ServiceResponse<bool>> UpdateQuantity(CartItem cartItem)
         {
             var response = await _context.Carts
                  .FirstOrDefaultAsync(c => c.ProductId == cartItem.ProductId &&

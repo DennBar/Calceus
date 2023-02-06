@@ -15,13 +15,13 @@ namespace Calceus.Client.Services.CartService
 
         public event Action CartChanged;
 
-        public async Task AddToCart(Cart cart)
+        public async Task AddToCart(CartItem cart)
         {
-            var myCart = await _localStorage.GetItemAsync<List<Cart>>("cart");
+            var myCart = await _localStorage.GetItemAsync<List<CartItem>>("cart");
 
             if (myCart == null)
             {
-                myCart = new List<Cart>();
+                myCart = new List<CartItem>();
             }
 
             myCart.Add(cart);
@@ -30,13 +30,13 @@ namespace Calceus.Client.Services.CartService
             CartChanged.Invoke();
         }
 
-        public async Task<List<Cart>> GetCartItems()
+        public async Task<List<CartItem>> GetCartItems()
         {
-            var cart = await _localStorage.GetItemAsync<List<Cart>>("cart");
+            var cart = await _localStorage.GetItemAsync<List<CartItem>>("cart");
 
             if (cart == null)
             {
-                cart = new List<Cart>();
+                cart = new List<CartItem>();
             }
 
             return cart;
@@ -44,7 +44,7 @@ namespace Calceus.Client.Services.CartService
 
         public async Task<List<CartResponse>> GetCartProducts()
         {
-            var cart = await _localStorage.GetItemAsync<List<Cart>>("cart");
+            var cart = await _localStorage.GetItemAsync<List<CartItem>>("cart");
 
             var response = await _http.PostAsJsonAsync("api/cart/products", cart);
 

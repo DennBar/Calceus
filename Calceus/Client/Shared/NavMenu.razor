@@ -116,7 +116,7 @@
 
     private int GetCartItemsCount()
     {
-        var cart = SyncLocalStorage.GetItem<List<Cart>>("cart");
+        var cart = SyncLocalStorage.GetItem<List<CartItem>>("cart");
         return cart != null ? cart.Count : 0;
     }
 }
