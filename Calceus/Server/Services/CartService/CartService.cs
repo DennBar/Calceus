@@ -5,9 +5,9 @@
         private readonly DataContext _context;
         private readonly IAuthService _authService;
 
-        public CartService(DataContext dataContext, IAuthService authService)
+        public CartService(DataContext context, IAuthService authService)
         {
-            _context = dataContext;
+            _context = context;
             _authService = authService;
         }
 
@@ -52,6 +52,7 @@
             {
                 var product = await _context.Products
                     .Where(p => p.Id == cartItem.ProductId)
+                    .Include(p => p.Images)
                     .FirstOrDefaultAsync();
 
                 if (product == null)
@@ -60,9 +61,11 @@
                 }
 
                 var store = await _context.Stores
-                    .Where(s => s.ProductId == cartItem.ColorId &&
+                    .Where(s => s.ProductId == cartItem.ProductId &&
                     s.SizeId == cartItem.SizeId &&
                     s.ColorId == cartItem.ColorId)
+                    .Include(s => s.Size)
+                    .Include(s => s.Color)
                     .FirstOrDefaultAsync();
 
                 if (store == null)

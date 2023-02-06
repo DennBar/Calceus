@@ -16,14 +16,15 @@
                 <AuthorizeView Roles="admin">
                     <Authorized>
                         <ul class="navbar-nav mb-2 mb-lg-0" style="margin-left:auto;">
-                            <li class="nav-item d-flex align-items-center nav-items-group dropdown">
-                                <a class="nav-link" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-                                    <i class="bi bi-house-door-fill" style="font-size: 1.5rem;"></i>
+                            <li class="nav-item">
+                                <a class="nav-link active" href="admin/categories/1">
+                                    Categorías
                                 </a>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="admin/categories/1">Categorías</a>
-                                    <a class="dropdown-item" href="admin/sizes/1">Tallas</a>
-                                </div>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" href="admin/sizes/1">
+                                    Tallas
+                                </a>
                             </li>
                         </ul>
                     </Authorized>
@@ -31,78 +32,60 @@
                 <AuthorizeView Roles="business">
                     <Authorized>
                         <ul class="navbar-nav">
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-                                    <i class="bi bi-building"></i> Mi negocio
+                            <li class="nav-item">
+                                <a class="nav-link active" href="business/colors/1">
+                                    Mis Colores
                                 </a>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="business/colors/1">Mis Colores</a>
-                                    <a class="dropdown-item" href="business/products/1">Mis Productos</a>
-                                    <a class="dropdown-item" href="business/stores/1">Mi Tienda</a>
-                                </div>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" href="business/products/1">
+                                    Mis Productos
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" href="business/stores/1">
+                                    Mi Tienda
+                                </a>
                             </li>
                         </ul>
-                    </Authorized>
-                </AuthorizeView>
-                <AuthorizeView Roles="customer">
-                    <Authorized>
-                        <form action="">
-                            <div class="form-group d-flex align-items-center">
-                                <input class="w-100" type="search" placeholder="Buscar artículo">
-                                <button class="my-color btn btn-secondary my-2 my-sm-0" type="submit">Buscar</button>
-                            </div>
-                        </form>
                     </Authorized>
                 </AuthorizeView>
                 <AuthorizeView>
                     <Authorized>
                         <ul class="navbar-nav mb-2 mb-lg-0" style="margin-left:auto;">
-                            <li class="nav-item">
-                                <form action="" class="search-form">
-                                    <div class="form-group d-flex align-items-center">
-                                        <input class="w-100" type="search" placeholder="Buscar artículo">
-                                        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Buscar</button>
-                                    </div>
-                                </form>
-                            </li>
                             <li class="nav-item d-flex align-items-center nav-items-group">
-                                <a class="nav-link" href="/cart">
-                                    <span class="cart-icon d-flex align-items-center text-white">
-                                        <i class="bi bi-cart-fill" style="font-size: 1.5rem;"></i>
-                                        <small class="text-white">0</small>
+                                <a class="nav-link" href="profile">
+                                    <span class="icon d-flex align-items-center text-white">
+                                        <i class="bi bi-person-fill" style="font-size: 1.5rem;"></i>
                                     </span>
                                 </a>
-                            </li>
-                            <li class="nav-item d-flex align-items-center nav-items-group dropdown">
-                                <a class="nav-link" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-                                    <i class="bi bi-person-fill" style="font-size: 1.5rem;"></i>
+                                <a class="nav-link" href="cart">
+                                    <span class="icon d-flex align-items-center text-white">
+                                        <i class="bi bi-cart-fill" style="font-size: 1.5rem;"></i>
+                                        <small class="text-white">@GetCartItemsCount()</small>
+                                    </span>
                                 </a>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="profile">Mi perfil</a>
-                                    <button class="dropdown-item" @onclick="LogoutHandler">Cerrar sesión</button>
-                                </div>
+                                <button class="nav-link" @onclick="LogoutHandler">
+                                    <span class="icon d-flex align-items-center text-white">
+                                        <i class="bi bi-box-arrow-right" style="font-size: 1.5rem;"></i>
+                                    </span>
+                                </button>
                             </li>
                         </ul>
                     </Authorized>
                     <NotAuthorized>
                         <ul class="navbar-nav mb-2 mb-lg-0" style="margin-left:auto;">
-                            <li class="nav-item">
-                                <form action="" class="search-form">
-                                    <div class="form-group d-flex align-items-center">
-                                        <input class="w-100" type="search" placeholder="Buscar artículo">
-                                        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Buscar</button>
-                                    </div>
-                                </form>
-                            </li>
                             <li class="nav-item d-flex align-items-center nav-items-group">
                                 <a class="nav-link" href="cart">
-                                    <span class="cart-icon d-flex align-items-center text-white">
+                                    <span class="icon d-flex align-items-center text-white">
                                         <i class="bi bi-cart-fill" style="font-size: 1.5rem;"></i>
-                                        <small class="text-white">0</small>
+                                        <small class="text-white">@GetCartItemsCount()</small>
                                     </span>
                                 </a>
                                 <a class="nav-link" href="login">
-                                    <i class="bi bi-person-fill" style="font-size: 1.5rem;"></i>
+                                    <span class="icon d-flex align-items-center text-white">
+                                        <i class="bi bi-box-arrow-in-left" style="font-size: 1.5rem;"></i>
+                                    </span>
                                 </a>
                             </li>
                         </ul>
@@ -114,6 +97,16 @@
 </header>
 
 @code {
+    protected override void OnInitialized()
+    {
+        CartService.CartChanged += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        CartService.CartChanged -= StateHasChanged;
+    }
+
     private async Task LogoutHandler()
     {
         await LocalStorage.RemoveItemAsync("authToken");
@@ -123,6 +116,7 @@
 
     private int GetCartItemsCount()
     {
-        var cart=SyncLocalStorage.GetItem
+        var cart = SyncLocalStorage.GetItem<List<Cart>>("cart");
+        return cart != null ? cart.Count : 0;
     }
 }

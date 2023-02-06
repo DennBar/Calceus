@@ -23,12 +23,12 @@
             border: none;
         }
 
-.nav-items-group .cart-icon {
+.nav-items-group .icon {
     margin: auto 2em;
     position: relative;
 }
 
-    .nav-items-group .cart-icon small {
+    .nav-items-group .icon small {
         position: absolute;
         top: -10px;
         right: -5px;
@@ -47,7 +47,7 @@
             width: 95%;
         }
 
-    .nav-items-group .cart-icon {
+    .nav-items-group .icon {
         margin: auto 2em auto 0;
     }
 }

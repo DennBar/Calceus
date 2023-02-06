@@ -8,6 +8,7 @@ global using Calceus.Server.Services.AuthService;
 global using Calceus.Server.Services.RoleService;
 global using Calceus.Server.Services.StoreService;
 global using Calceus.Server.Services.ProductService;
+global using Calceus.Server.Services.CartService;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -35,7 +36,7 @@ builder.Services.AddSwaggerGen(c =>
         Type = SecuritySchemeType.ApiKey,
         BearerFormat = "jwt",
         In = ParameterLocation.Header,
-        Name= "Authentication",
+        Name = "Authentication",
         Description = "Api Token Here"
     });
     c.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -59,6 +60,7 @@ builder.Services.AddScoped<ISizeService, SizeService>();
 builder.Services.AddScoped<IColorService, ColorService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IStoreService, StoreService>();
+builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
