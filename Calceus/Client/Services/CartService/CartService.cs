@@ -1,5 +1,4 @@
 ﻿using Blazored.LocalStorage;
-using Calceus.Shared;
 
 namespace Calceus.Client.Services.CartService
 {
@@ -51,6 +50,18 @@ namespace Calceus.Client.Services.CartService
             var cartProducts = await response.Content.ReadFromJsonAsync<ServiceResponse<List<CartResponse>>>();
 
             return cartProducts.Data;
+        }
+
+        public async Task RemoveProductFromCart(int productId, int sizeId, int colorId)
+        {
+            var cart = await _localStorage.GetItemAsync<List<CartItem>>("cart");
+
+            if (cart == null)
+            {
+                return;
+            }
+
+            var cartItem = cart.Find(x => x.ProductId == productId && x.SizeId == sizeId);
         }
     }
 }

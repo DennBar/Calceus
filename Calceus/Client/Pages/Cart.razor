@@ -1,42 +1,95 @@
 ﻿@page "/cart"
+@inject ICartService CartService
 
 <PageTitle>Carrito de compras</PageTitle>
 
 <div class="container my-5">
-    <div class="card">
-        <div class="card-body">
-            <div class="row">
-                <div class="col-sm-2 col-md-2">
-                    <img />
+    @if (isProcessing)
+    {
+        <div class="my-lg-5 d-flex align-items-center justify-content-center">
+            <div class="spinner-border text-primary"
+             style="width: 3rem; height: 3rem;"
+             role="status">
+            </div>
+        </div>
+    }
+    else
+    {
+        if (cartProducts == null || cartProducts.Count == 0)
+        {
+            <div class="py-2">
+                <div class="alert alert-dismissible alert-warning">
+                    <button type="button" class="btn-close" data-bs-dismiss="warning"></button>
+                    <strong>@mainErrorMessage</strong>
                 </div>
-                <div class="col-sm-4 col-md-6">
-                    <h4>Product Name</h4>
-                    <h3>Product description</h3>
+            </div>
+        }
+        else
+        {
+            <div class="card">
+                <div class="card-body">
+                    @foreach (var product in cartProducts)
+                    {
+                        <div class="row">
+                            <div class="col-12 col-sm-12 col-md-2 text-center">
+                                <img class="img-fluid" src="@product.ImageUrl" />
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-6 text-sm-center text-md-start">
+                                <h4>@product.Title</h4>
+                                <h4>Talla: <small>@product.Size</small></h4>
+                                <h4>Color: <small>@product.Color</small></h4>
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-4 text-sm-center text-md-end row">
+                                <div class="col-3 col-sm-6 col-md-6 text-md-end" style="padding-top:10px">
+                                    <h6><strong>$ @product.Price</strong></h6>
+                                </div>
+                                <div class="col-4 col-sm-4 col-md-4">
+                                    <div class="quantity">
+                                        <input type="button" value="+" class="plus" />
+                                        <input type="number" step="1" min="1" max="99" value="1" title="Qty" class="qty" size="4" />
+                                        <input type="button" value="-" class="minus" />
+                                    </div>
+                                </div>
+                                <div class="col-2 col-sm-2 col-md-2 text-end">
+                                    <button type="button" class="btn btn-outline-danger btn-sm" style="margin-top:5px">
+                                        <i class="bi bi-trash-fill"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    }
                 </div>
-                <div class="col-sm-6 col-md-4 row">
-                    <div class="col-sm-6 col-md-6 text-md-start" style="padding-top:5px">
-                        <h6><strong>$ 25.00</strong></h6>
-                    </div>
-                    <div class="col-sm-4 col-md-4">
-                        <h1>1</h1>
-                    </div>
-                    <div class="col-sm-2 col-md-2">
-                        <button type="button" class="btn btn-outline-danger btn-sm">
-                            x
-                        </button>
+                <div class="card-footer">
+                    <div class="float-end" style="margin: 10px">
+                        <a href="" class="btn btn-success float-end">Address</a>
+                        <div class="float-end" style="margin: 10px 25px">
+                            Total (@cartProducts.Count): <strong>$ @cartProducts.Sum(p=>p.Price)</strong>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="card-footer">
-            <div class="">
-                Total <strong>$ 50.00</strong>
-            </div>
-            <a href="" class="btn btn-success">Address</a>
-        </div>
-    </div>
+        }
+    }
 </div>
 
 @code {
+    bool isProcessing { get; set; } = false;
+    string mainErrorMessage { get; set; } = string.Empty;
+    string secondaryErrorMessage { get; set; } = string.Empty;
+    string message { get; set; } = string.Empty;
 
+    List<CartResponse> cartProducts = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if ((await CartService.GetCartItems()).Count == 0)
+        {
+            message = "Tu carrito está vacío";
+            cartProducts = new List<CartResponse>();
+        }
+        else
+        {
+            cartProducts = await CartService.GetCartProducts();
+        }
+    }
 }
