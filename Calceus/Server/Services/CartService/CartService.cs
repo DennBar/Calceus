@@ -83,7 +83,7 @@
                     Size = store.Size.Ec,
                     ColorId = store.ColorId,
                     Color = store.Color.Name,
-                    Quantity = store.Quantity,
+                    Quantity = cartItem.Quantity,
                 };
 
                 response.Data.Add(cartProduct);
