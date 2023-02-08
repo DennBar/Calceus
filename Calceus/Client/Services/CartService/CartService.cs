@@ -6,36 +6,46 @@ namespace Calceus.Client.Services.CartService
     {
         private readonly ILocalStorageService _localStorage;
         private readonly HttpClient _http;
-        public CartService(ILocalStorageService localStorage, HttpClient http)
+        private readonly IAuthService _authService;
+        public CartService(ILocalStorageService localStorage, HttpClient http, IAuthService authService)
         {
             _localStorage = localStorage;
             _http = http;
+            _authService = authService;
         }
 
         public event Action CartChanged;
 
         public async Task AddToCart(CartItem cartItem)
         {
-            var cart = await _localStorage.GetItemAsync<List<CartItem>>("cart");
-
-            if (cart == null)
+            if (await _authService.IsUserAuthenticated())
             {
-                cart = new List<CartItem>();
-            }
-
-            var currentItem = cart.Find(ci => ci.ProductId == cartItem.ProductId && ci.SizeId == cartItem.SizeId && ci.ColorId == cartItem.ColorId);
-
-            if (currentItem == null)
-            {
-                cart.Add(cartItem);
+                await _http.PostAsJsonAsync("api/cart/add", cartItem);
             }
             else
             {
-                currentItem.Quantity += cartItem.Quantity;
+                var cart = await _localStorage.GetItemAsync<List<CartItem>>("cart");
+
+                if (cart == null)
+                {
+                    cart = new List<CartItem>();
+                }
+
+                var currentItem = cart.Find(ci => ci.ProductId == cartItem.ProductId && ci.SizeId == cartItem.SizeId && ci.ColorId == cartItem.ColorId);
+
+                if (currentItem == null)
+                {
+                    cart.Add(cartItem);
+                }
+                else
+                {
+                    currentItem.Quantity += cartItem.Quantity;
+                }
+
+                await _localStorage.SetItemAsync("cart", cart);
             }
 
-            await _localStorage.SetItemAsync("cart", cart);
-            CartChanged.Invoke();
+            await GetCartItemsCount();
         }
 
         public async Task<List<CartItem>> GetCartItems()
@@ -50,19 +60,58 @@ namespace Calceus.Client.Services.CartService
             return cart;
         }
 
+        public async Task GetCartItemsCount()
+        {
+            if (await _authService.IsUserAuthenticated())
+            {
+                var response = await _http.GetFromJsonAsync<ServiceResponse<int>>("api/cart/count");
+
+                var count = response.Data;
+
+                await _localStorage.SetItemAsync<int>("cartItemsCount", count);
+            }
+            else
+            {
+                var cart = await _localStorage.GetItemAsync<List<CartItem>>("cart");
+
+                await _localStorage.SetItemAsync<int>("cartItemsCount", cart != null ? cart.Count : 0);
+            }
+
+            CartChanged.Invoke();
+        }
+
         public async Task<List<CartResponse>> GetCartProducts()
         {
-            var cart = await _localStorage.GetItemAsync<List<CartItem>>("cart");
+            if (await _authService.IsUserAuthenticated())
+            {
+                var response = await _http.GetFromJsonAsync<ServiceResponse<List<CartResponse>>>("api/cart");
 
-            var response = await _http.PostAsJsonAsync("api/cart/products", cart);
+                return response.Data;
+            }
+            else
+            {
+                var cart = await _localStorage.GetItemAsync<List<CartItem>>("cart");
 
-            var cartProducts = await response.Content.ReadFromJsonAsync<ServiceResponse<List<CartResponse>>>();
+                if (cart == null)
+                {
+                    return new List<CartResponse>();
+                }
 
-            return cartProducts.Data;
+                var response = await _http.PostAsJsonAsync("api/cart/products", cart);
+
+                var cartProducts = await response.Content.ReadFromJsonAsync<ServiceResponse<List<CartResponse>>>();
+
+                return cartProducts.Data;
+            }
         }
 
         public async Task RemoveProductFromCart(int productId, int sizeId, int colorId)
         {
+            if (await _authService.IsUserAuthenticated())
+            {
+                await _http.DeleteAsync($"api/cart/{productId}/{sizeId}/{colorId}");
+            }
+
             var cart = await _localStorage.GetItemAsync<List<CartItem>>("cart");
 
             if (cart == null)
@@ -78,6 +127,11 @@ namespace Calceus.Client.Services.CartService
                 await _localStorage.SetItemAsync("cart", cart);
                 CartChanged.Invoke();
             }
+        }
+
+        public Task StoreCartItems(bool emptyLocalCart)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task UpdateQuantity(CartResponse product)
