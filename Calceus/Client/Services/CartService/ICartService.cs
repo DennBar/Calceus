@@ -3,8 +3,7 @@
     public interface ICartService
     {
         event Action CartChanged;
-        Task AddToCart(CartItem cartItem);
-        Task<List<CartItem>> GetCartItems();
+        Task AddToCart(CartItem cartItem);        
         Task<List<CartResponse>> GetCartProducts();
         Task RemoveProductFromCart(int productId, int sizeId, int colorId);
         Task UpdateQuantity(CartResponse product);

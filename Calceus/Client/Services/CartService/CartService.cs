@@ -46,19 +46,7 @@ namespace Calceus.Client.Services.CartService
             }
 
             await GetCartItemsCount();
-        }
-
-        public async Task<List<CartItem>> GetCartItems()
-        {
-            var cart = await _localStorage.GetItemAsync<List<CartItem>>("cart");
-
-            if (cart == null)
-            {
-                cart = new List<CartItem>();
-            }
-
-            return cart;
-        }
+        }       
 
         public async Task GetCartItemsCount()
         {
@@ -125,30 +113,56 @@ namespace Calceus.Client.Services.CartService
             {
                 cart.Remove(cartItem);
                 await _localStorage.SetItemAsync("cart", cart);
-                CartChanged.Invoke();
             }
         }
 
-        public Task StoreCartItems(bool emptyLocalCart)
+        public async Task StoreCartItems(bool emptyLocalCart = false)
         {
-            throw new NotImplementedException();
-        }
+            var localCart = await _localStorage.GetItemAsync<List<CartItem>>("cart");
 
-        public async Task UpdateQuantity(CartResponse product)
-        {
-            var cart = await _localStorage.GetItemAsync<List<CartItem>>("cart");
-
-            if (cart == null)
+            if (localCart == null)
             {
                 return;
             }
 
-            var cartItem = cart.Find(x => x.ProductId == product.ProductId && x.SizeId == product.SizeId && x.ColorId == product.ColorId);
+            await _http.PostAsJsonAsync("api/cart", localCart);
 
-            if (cartItem != null)
+            if (emptyLocalCart)
             {
-                cartItem.Quantity = product.Quantity;
-                await _localStorage.SetItemAsync("cart", cart);
+                await _localStorage.RemoveItemAsync("cart");
+            }
+        }
+
+        public async Task UpdateQuantity(CartResponse product)
+        {
+            if (await _authService.IsUserAuthenticated())
+            {
+                var response = new CartItem
+                {
+                    ProductId = product.ProductId,
+                    Quantity = product.Quantity,
+                    SizeId = product.SizeId,
+                    ColorId = product.ColorId,
+                };
+
+                await _http.PutAsJsonAsync("api/cart/quantity", response);
+            }
+            else
+            {
+                var cart = await _localStorage.GetItemAsync<List<CartItem>>("cart");
+
+                if (cart == null)
+                {
+                    return;
+                }
+
+                var cartItem = cart.Find(x => x.ProductId == product.ProductId && x.SizeId == product.SizeId && x.ColorId == product.ColorId);
+
+                if (cartItem != null)
+                {
+                    cartItem.Quantity = product.Quantity;
+                    await _localStorage.SetItemAsync("cart", cart);
+                }
             }
         }
     }

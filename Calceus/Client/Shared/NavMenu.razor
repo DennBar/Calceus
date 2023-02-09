@@ -107,16 +107,18 @@
         CartService.CartChanged -= StateHasChanged;
     }
 
+    private int GetCartItemsCount()
+    {
+        var count = SyncLocalStorage.GetItem<int>("cartItemsCount");
+
+        return count;
+    }
+
     private async Task LogoutHandler()
     {
         await LocalStorage.RemoveItemAsync("authToken");
+        await CartService.GetCartItemsCount();
         await AuthenticationStateProvider.GetAuthenticationStateAsync();
         NavigationManager.NavigateTo("");
-    }
-
-    private int GetCartItemsCount()
-    {
-        var cart = SyncLocalStorage.GetItem<List<CartItem>>("cart");
-        return cart != null ? cart.Count : 0;
     }
 }

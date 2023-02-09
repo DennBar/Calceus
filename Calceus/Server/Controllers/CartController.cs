@@ -45,7 +45,7 @@ namespace Calceus.Server.Controllers
             return Ok(response);
         }
 
-        [HttpDelete("{productId/sizeId/colorId}")]
+        [HttpDelete("{productId}/{sizeId}/{colorId}")]
         public async Task<ActionResult<ServiceResponse<bool>>> RemoveItemFromCart(int productId, int sizeId, int colorId)
         {
             var response = await _cartService.RemoveItemFromCart(productId, sizeId, colorId);

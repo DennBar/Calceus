@@ -3,6 +3,7 @@
 @inject NavigationManager NavigationManager
 @inject ILocalStorageService LocalStorageService
 @inject IAuthService AuthService
+@inject ICartService CartService
 
 <PageTitle>Inicia Sesión</PageTitle>
 
@@ -80,6 +81,10 @@
             await LocalStorageService.SetItemAsync("authToken", result.Data);
 
             await AuthenticationStateProvider.GetAuthenticationStateAsync();
+
+            await CartService.StoreCartItems(true);
+
+            await CartService.GetCartItemsCount();
 
             NavigationManager.NavigateTo("");
 

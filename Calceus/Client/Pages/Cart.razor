@@ -45,9 +45,7 @@
                                 </div>
                                 <div class="col-4 col-sm-4 col-md-4">
                                     <div class="quantity">
-                                        <input type="button" value="+" class="plus" />
-                                        <input type="number" step="1" min="1" max="99" title="Qty" class="qty" size="4" value="@product.Quantity" onchange="@((ChangeEventArgs e) => UpdateQuantity(e,product))" />
-                                        <input type="button" value="-" class="minus" />
+                                        <input type="number" step="1" min="1" max="99" title="Qty" class="qty" size="4" value="@product.Quantity" @onchange="@((ChangeEventArgs e) => UpdateQuantity(e,product))" />
                                     </div>
                                 </div>
                                 <div class="col-2 col-sm-2 col-md-2 text-end">
@@ -63,7 +61,7 @@
                     <div class="float-end" style="margin: 10px">
                         <a href="" class="btn btn-success float-end">Address</a>
                         <div class="float-end" style="margin: 10px 25px">
-                            Total (@cartProducts.Count): <strong>$ @cartProducts.Sum(product => @product.Price * product.Quantity)</strong>
+                            Total (@cartProducts.Count) : <strong>$ @cartProducts.Sum(p => @p.Price * p.Quantity)</strong>
                         </div>
                     </div>
                 </div>
@@ -98,14 +96,13 @@
 
     private async Task LoadCart()
     {
-        if ((await CartService.GetCartItems()).Count == 0)
+        await CartService.GetCartItemsCount();
+
+        cartProducts = await CartService.GetCartProducts();
+
+        if (cartProducts == null || cartProducts.Count == 0)
         {
             mainErrorMessage = "Tu carrito está vacío";
-            cartProducts = new List<CartResponse>();
-        }
-        else
-        {
-            cartProducts = await CartService.GetCartProducts();
         }
     }
 
@@ -117,6 +114,9 @@
         {
             product.Quantity = 1;
         }
+
+        Console.WriteLine(cartProducts.Count);
+        Console.WriteLine(product.Quantity);
 
         await CartService.UpdateQuantity(product);
     }
