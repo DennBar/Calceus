@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Calceus.Server.Controllers
@@ -22,5 +23,28 @@ namespace Calceus.Server.Controllers
             return Ok(response);
         }
 
+        [HttpGet("business"), Authorize(Roles = "business")]
+        public async Task<ActionResult<ServiceResponse<List<OrderVendorResponse>>>> GetVendorOrders()
+        {
+            var response = await _orderService.GetVendorOrders();
+
+            return Ok(response);
+        }
+
+        [HttpGet("customer")]
+        public async Task<ActionResult<ServiceResponse<List<OrderCustomerResponse>>>> GetCustomerOrders()
+        {
+            var response = await _orderService.GetCustomerOrders();
+
+            return Ok(response);
+        }
+
+        [HttpGet("customer/{orderId}")]
+        public async Task<ActionResult<ServiceResponse<OrderResponse>>> GetCustomerOrderDetails(int orderId)
+        {
+            var response = await _orderService.GetCustomerOrderDetails(orderId);
+
+            return Ok(response);
+        }
     }
 }

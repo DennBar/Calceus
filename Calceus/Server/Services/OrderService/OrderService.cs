@@ -13,6 +13,109 @@
             _authService = authService;
         }
 
+        public async Task<ServiceResponse<OrderResponse>> GetCustomerOrderDetails(int orderId)
+        {
+            var response = new ServiceResponse<OrderResponse>();
+
+            var order = await _context.Orders
+                .Include(o => o.OrderItems)
+                .ThenInclude(oi => oi.Product)
+                .Include(o => o.OrderItems)
+                .ThenInclude(oi => oi.Color)
+                .Include(o => o.OrderItems)
+                .ThenInclude(oi => oi.Size)
+                .Where(o => o.UserId == _authService.GetUserId() && o.Id == orderId)
+                .OrderByDescending(o => o.OrderDate)
+                .FirstOrDefaultAsync();
+
+            if (order == null)
+            {
+                response.Success = false;
+                response.Message = "Orden no encontrado";
+                return response;
+            }
+
+            var orderResponse = new OrderResponse
+            {
+                OrderDate = order.OrderDate,
+                TotalPrice = order.TotalPrice,
+                Products = new List<OrderDetailsResponse>()
+            };
+
+            order.OrderItems.ForEach(o =>
+            orderResponse.Products.Add(new OrderDetailsResponse
+            {
+                ProductId = (int)o.ProductId,
+                ImageUrl = o.Product.Images[0].Data,
+                Size = o.Size.Ec,
+                Color = o.Color.Name,
+                Quantity = o.Quantity,
+                Title = o.Product.Name,
+                TotalPrice = o.TotalPrice,
+            }));
+
+            response.Data = orderResponse;
+
+            return response;
+        }
+
+        public async Task<ServiceResponse<List<OrderCustomerResponse>>> GetCustomerOrders()
+        {
+            var response = new ServiceResponse<List<OrderCustomerResponse>>();
+
+            var orders = await _context.Orders
+                .Include(o => o.OrderItems)
+                .ThenInclude(oi => oi.Product)
+                .Where(o => o.UserId == _authService.GetUserId())
+                .OrderByDescending(o => o.OrderDate)
+                .ToListAsync();
+
+            var orderCustomerResponse = new List<OrderCustomerResponse>();
+
+            orders.ForEach(o => orderCustomerResponse.Add(new OrderCustomerResponse
+            {
+                Id = o.Id,
+                OrderDate = o.OrderDate,
+                TotalPrice = o.TotalPrice,
+                Product = o.OrderItems.Count > 1 ?
+                $"{o.OrderItems.First().Product.Name} y " +
+                $"{o.OrderItems.Count - 1} más" :
+                o.OrderItems.First().Product.Name,
+                ProductImageUrl = o.OrderItems.First().Product.Images[0].Data
+            }));
+
+            response.Data = orderCustomerResponse;
+
+            return response;
+        }
+
+        public async Task<ServiceResponse<List<OrderVendorResponse>>> GetVendorOrders()
+        {
+            var response = new ServiceResponse<List<OrderVendorResponse>>();
+
+            var orders = await _context.Orders
+                .Include(o => o.OrderItems)
+                .ThenInclude(oi => oi.Color)
+                .Include(o => o.OrderItems)
+                .ThenInclude(oi => oi.Size)
+                .Include(o => o.OrderItems)
+                .ThenInclude(oi => oi.Product)
+                .ThenInclude(p => p.Images)
+                .Select(o => o.OrderItems.Where(oi => oi.Product.UserId == _authService.GetUserId()))
+                .ToListAsync();
+
+            var orderVendorResponse = new List<OrderVendorResponse>();
+
+            orders.ForEach(o => orderVendorResponse.Add(new OrderVendorResponse
+            {
+                OrderVendorItems = o.ToList(),
+            }));
+
+            response.Data = orderVendorResponse;
+
+            return response;
+        }
+
         public async Task<ServiceResponse<bool>> PlaceOrder()
         {
             var products = (await _cartService.GetCartProductsByDb(_authService.GetUserId())).Data;
@@ -48,6 +151,8 @@
 
             return new ServiceResponse<bool> { Data = true };
         }
+
+
     }
 }
 
