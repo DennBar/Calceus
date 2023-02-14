@@ -1,5 +1,6 @@
 ﻿@page "/orders"
 @inject IOrderService OrderService
+@inject IProfileService ProfileService
 
 <PageTitle>Mis órdenes</PageTitle>
 
@@ -15,50 +16,62 @@
     }
     else
     {
-        if (orders == null || orders.Count <= 0)
+        if (profile == null)
         {
             <div class="py-2">
                 <div class="alert alert-dismissible alert-secondary">
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    <strong>No tienes órdenes, todavía</strong>
+                    <strong>Completa tu perfil para completar tu envío de la compra</strong>
                 </div>
             </div>
         }
         else
         {
-            @foreach (var order in orders)
+            if (orders == null || orders.Count <= 0)
             {
-                <div class="row">
-                    <div class="col-lg-8">
-                        <div class="card mb-4">
-                            <div class="card-body">
-                                <div class="mb-3 d-flex justify-content-between">
-                                    <div>
-                                        <span class="me-3">Orden # @order.Id</span>
+                <div class="py-2">
+                    <div class="alert alert-dismissible alert-secondary">
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        <strong>No tienes órdenes, todavía</strong>
+                    </div>
+                </div>
+            }
+            else
+            {
+                @foreach (var order in orders)
+                {
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <div class="card mb-4">
+                                <div class="card-body">
+                                    <div class="mb-3 d-flex justify-content-between">
+                                        <div>
+                                            <span class="me-3">Orden # @order.Id</span>
+                                        </div>
                                     </div>
+                                    <table class="table table-borderless">
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    <div class="d-flex mb-2">
+                                                        <div class="flex-shrink-0">
+                                                            <img src="@order.ProductImageUrl" class="img-fluid" />
+                                                        </div>
+                                                        <div class="flex-lg-grow-1 ms-3">
+                                                            <h6 class="small mb-0">@order.Product</h6>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>1</td>
+                                                <td class="text-end">$ @order.TotalPrice</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
-                                <table class="table table-borderless">
-                                    <tbody>
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex mb-2">
-                                                    <div class="flex-shrink-0">
-                                                        <img src="@order.ProductImageUrl" class="img-fluid" />
-                                                    </div>
-                                                    <div class="flex-lg-grow-1 ms-3">
-                                                        <h6 class="small mb-0">@order.Product</h6>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>1</td>
-                                            <td class="text-end">$ @order.TotalPrice</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
                             </div>
                         </div>
                     </div>
-                </div>
+                }
             }
         }
     }
@@ -70,11 +83,13 @@
     string message { get; set; } = string.Empty;
 
     List<OrderCustomerResponse> orders = null;
+    Profile profile = null;
 
     protected override async Task OnInitializedAsync()
     {
         isProcessing = true;
 
+        profile = await ProfileService.GetProfile();
         orders = await OrderService.GetCustomerOrders();
 
         isProcessing = false;

@@ -124,6 +124,8 @@
     {
         string url = await OrderService.PlaceOrder();
 
+        await CartService.GetCartItemsCount();
+
         NavigationManager.NavigateTo(url);
     }
 }

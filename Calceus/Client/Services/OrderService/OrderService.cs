@@ -12,14 +12,14 @@
 
         public async Task<OrderResponse> GetCustomerOrderDetails(int orderId)
         {
-            var response = await _http.GetFromJsonAsync<ServiceResponse<OrderResponse>>($"api/order/customer/{orderId}");
+            var response = await _http.GetFromJsonAsync<ServiceResponse<OrderResponse>>($"api/order/{orderId}");
 
             return response.Data;
         }
 
         public async Task<List<OrderCustomerResponse>> GetCustomerOrders()
         {
-            var response = await _http.GetFromJsonAsync<ServiceResponse<List<OrderCustomerResponse>>>("api/order/customer");
+            var response = await _http.GetFromJsonAsync<ServiceResponse<List<OrderCustomerResponse>>>("api/order");
 
             return response.Data;
         }
@@ -35,7 +35,7 @@
         {
             if (await _authService.IsUserAuthenticated())
             {
-                await _http.PostAsync("api/order/customer", null);
+                await _http.PostAsync("api/order", null);
                 return "orders";
             }
             else
