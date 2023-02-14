@@ -35,7 +35,7 @@
         {
             if (await _authService.IsUserAuthenticated())
             {
-                await _http.PostAsync("api/order", null);
+                await _http.PostAsync("api/order/customer", null);
                 return "orders";
             }
             else

@@ -66,6 +66,8 @@
             var orders = await _context.Orders
                 .Include(o => o.OrderItems)
                 .ThenInclude(oi => oi.Product)
+                .Include(o => o.OrderItems)
+                .ThenInclude(oi => oi.Product.Images)
                 .Where(o => o.UserId == _authService.GetUserId())
                 .OrderByDescending(o => o.OrderDate)
                 .ToListAsync();

@@ -18,7 +18,7 @@
 
         public async Task<Profile> GetProfile()
         {
-            var response = await _http.GetFromJsonAsync<ServiceResponse<Profile>>("api/address");
+            var response = await _http.GetFromJsonAsync<ServiceResponse<Profile>>("api/profile");
 
             return response.Data;
         }
