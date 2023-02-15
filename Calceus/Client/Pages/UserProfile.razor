@@ -1,9 +1,114 @@
 ﻿@page "/profile"
+@inject IProfileService ProfileService
 
-<AuthorizeView>
-    <h3>Hola, <i>@context.User.Identity.Name</i></h3>
-</AuthorizeView>
+<PageTitle>Mi perfil</PageTitle>
+
+<div class="container">
+    @if (isProcessing)
+    {
+        <div class="my-lg-5 d-flex align-items-center justify-content-center vh-100">
+            <div class="spinner-border text-primary"
+             style="width: 3rem; height: 3rem;"
+             role="status">
+            </div>
+        </div>
+    }
+    else
+    {
+        if (profile == null)
+        {
+            <div class="d-flex justify-content-center align-items-center mt-5">
+                <div class="bg-white p-5 rounded-5 text-secondary shadow">
+                    <span>Todavía no has completado tu perfil</span>
+                    <button class="btn btn-primary" @onclick="InitProfile">Completa tu perfil</button>
+                </div>
+            </div>
+        }
+        else if (!editProfile)
+        {
+            <div class="d-flex justify-content-center align-items-center mt-5">
+                <div class="bg-white p-5 rounded-5 text-secondary shadow">
+                    <span>@profile.FirstName @profile.LastName</span>
+                    <span>@profile.Street</span>
+                    <span>@profile.City, @profile.Province @profile.PostalCode</span>
+                    <span>@profile.Country</span>
+                    <button class="btn btn-primary" @onclick="EditProfile">Editar</button>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="d-flex justify-content-center align-items-center mt-5">
+                <div class="bg-white p-5 rounded-5 text-secondary shadow">
+                    <EditForm Model="profile" OnValidSubmit="SubmitProfile">
+                        <DataAnnotationsValidator />
+                        <div class="input-group mt-4">
+                            <div class="input-group mt-3">
+                                <span class="input-group-text bg-primary"></span>
+                                <InputText id="firstname" placeholder="Nombre" @bind-Value="profile.FirstName" class="form-control" />
+                            </div>
+                            <div class="input-group mt-3">
+                                <span class="input-group-text bg-primary"></span>
+                                <InputText id="firstname" placeholder="Apellido" @bind-Value="profile.LastName" class="form-control" />
+                            </div>
+                            <div class="input-group mt-3">
+                                <span class="input-group-text bg-primary"></span>
+                                <InputText id="street" placeholder="Calles" @bind-Value="profile.Street" class="form-control" />
+                            </div>
+                            <div class="input-group mt-3">
+                                <span class="input-group-text bg-primary"></span>
+                                <InputText id="city" placeholder="Ciudad" @bind-Value="profile.City" class="form-control" />
+                            </div>
+                            <div class="input-group mt-3">
+                                <span class="input-group-text bg-primary"></span>
+                                <InputText id="province" placeholder="Provincia" @bind-Value="profile.Province" class="form-control" />
+                            </div>
+                            <div class="input-group mt-3">
+                                <span class="input-group-text bg-primary"></span>
+                                <InputText id="postalCode" placeholder="Código postal" @bind-Value="profile.PostalCode" class="form-control" />
+                            </div>
+                            <div class="input-group mt-3">
+                                <span class="input-group-text bg-primary"></span>
+                                <InputText id="country" placeholder="Country" @bind-Value="profile.Country" class="form-control" />
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </EditForm>
+                </div>
+            </div>
+        }
+    }
+</div>
+
 
 @code {
+    Profile profile = null;
+    bool editProfile = false;
+    bool isProcessing = false;
 
+    protected override async Task OnInitializedAsync()
+    {
+        isProcessing = true;
+
+        profile = await ProfileService.GetProfile();
+
+        isProcessing = false;
+    }
+
+    private async Task SubmitProfile()
+    {
+        editProfile = false;
+        profile = await ProfileService.AddOrUpdateProfile(profile);
+    }
+
+    private void InitProfile()
+    {
+        profile = new Profile();
+        editProfile = true;
+    }
+
+    private void EditProfile()
+    {
+        editProfile = true;
+    }
 }
