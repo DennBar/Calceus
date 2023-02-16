@@ -1,0 +1,95 @@
+﻿@page "/order/{id:int}"
+@inject IOrderService OrderService
+
+<PageTitle>Mi orden</PageTitle>
+
+<div class="container">
+    @if (isProcessing)
+    {
+        <div class="my-lg-5 d-flex align-items-center justify-content-center">
+            <div class="spinner-border text-primary"
+             style="width: 3rem; height: 3rem;"
+             role="status">
+            </div>
+        </div>
+    }
+    else
+    {
+        if (order == null)
+        {
+            <div class="py-2">
+                <div class="alert alert-dismissible alert-secondary">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    <strong>Esta orden no existe</strong>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="row justify-content-center align-items-center mt-5">
+                <div class="col-lg-8">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <table class="table table-borderless">
+                                <tbody>
+                                    @foreach (var product in order.Products)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex mb-2">
+                                                    <div class="flex-shrink-0">
+                                                        <img class="img-fluid" width="45" src="@product.ImageUrl" />
+                                                    </div>
+                                                    <div class="flex-lg-grow-1 ms-3">
+                                                        <h6 class="small mb-0">@product.Title</h6>
+                                                        <span class="small">Talla: @product.Size</span><br />
+                                                        <span class="small">Color: @product.Color</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>x @product.Quantity</td>
+                                            <td class="text-end">$ @product.TotalPrice</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="2">TOTAL</td>
+                                        <td class="text-end">$ @order.TotalPrice</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h3 class="h6">Notas al consumidor</h3>
+                            <p>El pago solo se hará por efectivo, el paquete podrá llegar al comprador via currier o, si es posible, el comprador deberá acercarse a la tienda para recoger su pedido</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    bool isProcessing = false;
+
+
+    OrderResponse order = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        isProcessing = true;
+
+        order = await OrderService.GetCustomerOrderDetails(Id);
+
+        isProcessing = false;
+    }
+}

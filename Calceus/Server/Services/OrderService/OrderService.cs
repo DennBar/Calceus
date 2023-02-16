@@ -21,6 +21,8 @@
                 .Include(o => o.OrderItems)
                 .ThenInclude(oi => oi.Product)
                 .Include(o => o.OrderItems)
+                .ThenInclude(oi => oi.Product.Images)
+                .Include(o => o.OrderItems)
                 .ThenInclude(oi => oi.Color)
                 .Include(o => o.OrderItems)
                 .ThenInclude(oi => oi.Size)
@@ -65,9 +67,7 @@
 
             var orders = await _context.Orders
                 .Include(o => o.OrderItems)
-                .ThenInclude(oi => oi.Product)
-                .Include(o => o.OrderItems)
-                .ThenInclude(oi => oi.Product.Images)
+                .ThenInclude(oi => oi.Product)                
                 .Where(o => o.UserId == _authService.GetUserId())
                 .OrderByDescending(o => o.OrderDate)
                 .ToListAsync();
@@ -78,12 +78,7 @@
             {
                 Id = o.Id,
                 OrderDate = o.OrderDate,
-                TotalPrice = o.TotalPrice,
-                Product = o.OrderItems.Count > 1 ?
-                $"{o.OrderItems.First().Product.Name} y " +
-                $"{o.OrderItems.Count - 1} más" :
-                o.OrderItems.First().Product.Name,
-                ProductImageUrl = o.OrderItems.First().Product.Images[0].Data
+                TotalPrice = o.TotalPrice                                
             }));
 
             response.Data = orderCustomerResponse;
@@ -124,7 +119,7 @@
 
             decimal totalPrice = 0;
 
-            products.ForEach(p => totalPrice = p.Price * p.Quantity);
+            products.ForEach(p => totalPrice += p.Price * p.Quantity);
 
             var orderItems = new List<OrderItem>();
 

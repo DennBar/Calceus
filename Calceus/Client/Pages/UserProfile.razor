@@ -19,8 +19,8 @@
         {
             <div class="d-flex justify-content-center align-items-center mt-5">
                 <div class="bg-white p-5 rounded-5 text-secondary shadow">
-                    <span>Todavía no has completado tu perfil</span>
-                    <button class="btn btn-primary" @onclick="InitProfile">Completa tu perfil</button>
+                    <h3>Todavía no has completado tu perfil</h3>
+                    <button class="btn btn-primary w-100 mt-4 fw-semibold shadow-sm" @onclick="InitProfile">Completa tu perfil</button>
                 </div>
             </div>
         }
@@ -28,11 +28,11 @@
         {
             <div class="d-flex justify-content-center align-items-center mt-5">
                 <div class="bg-white p-5 rounded-5 text-secondary shadow">
-                    <span>@profile.FirstName @profile.LastName</span>
-                    <span>@profile.Street</span>
-                    <span>@profile.City, @profile.Province @profile.PostalCode</span>
-                    <span>@profile.Country</span>
-                    <button class="btn btn-primary" @onclick="EditProfile">Editar</button>
+                    <h4>@profile.FirstName @profile.LastName</h4>
+                    <h4>@profile.Street</h4>
+                    <h4>@profile.City, @profile.Province @profile.PostalCode</h4>
+                    <h4>@profile.Country</h4>
+                    <button class="btn btn-primary w-100 mt-4 fw-semibold shadow-sm" @onclick="EditProfile">Editar</button>
                 </div>
             </div>
         }
@@ -44,35 +44,28 @@
                         <DataAnnotationsValidator />
                         <div class="input-group mt-4">
                             <div class="input-group mt-3">
-                                <span class="input-group-text bg-primary"></span>
                                 <InputText id="firstname" placeholder="Nombre" @bind-Value="profile.FirstName" class="form-control" />
                             </div>
                             <div class="input-group mt-3">
-                                <span class="input-group-text bg-primary"></span>
                                 <InputText id="firstname" placeholder="Apellido" @bind-Value="profile.LastName" class="form-control" />
                             </div>
                             <div class="input-group mt-3">
-                                <span class="input-group-text bg-primary"></span>
                                 <InputText id="street" placeholder="Calles" @bind-Value="profile.Street" class="form-control" />
                             </div>
                             <div class="input-group mt-3">
-                                <span class="input-group-text bg-primary"></span>
                                 <InputText id="city" placeholder="Ciudad" @bind-Value="profile.City" class="form-control" />
                             </div>
                             <div class="input-group mt-3">
-                                <span class="input-group-text bg-primary"></span>
                                 <InputText id="province" placeholder="Provincia" @bind-Value="profile.Province" class="form-control" />
                             </div>
                             <div class="input-group mt-3">
-                                <span class="input-group-text bg-primary"></span>
                                 <InputText id="postalCode" placeholder="Código postal" @bind-Value="profile.PostalCode" class="form-control" />
                             </div>
                             <div class="input-group mt-3">
-                                <span class="input-group-text bg-primary"></span>
                                 <InputText id="country" placeholder="Country" @bind-Value="profile.Country" class="form-control" />
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-primary">Guardar</button>
+                        <button type="submit" class="btn btn-primary w-100 mt-4 fw-semibold shadow-sm">Guardar</button>
                     </EditForm>
                 </div>
             </div>

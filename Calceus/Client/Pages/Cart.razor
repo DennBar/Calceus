@@ -63,7 +63,7 @@
                     <div class="float-end" style="margin: 10px">
                         <button class="btn btn-success float-end" @onclick="PlaceOrder">Realizar orden</button>
                         <div class="float-end" style="margin: 10px 25px">
-                            Total (@cartProducts.Count) : <strong>$ @cartProducts.Sum(p => @p.Price * p.Quantity)</strong>
+                            Total (@cartProducts.Count) : <strong>$ @cartProducts.Sum(product => @product.Price * product.Quantity)</strong>
                         </div>
                     </div>
                 </div>
