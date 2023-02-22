@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Calceus.Server.Controllers
@@ -14,7 +15,7 @@ namespace Calceus.Server.Controllers
             _storeService = storeService;
         }
 
-        [HttpGet("product/{productId}")]
+        [HttpGet("product/{productId}"), Authorize(Roles = "business")]
         public async Task<ActionResult<ServiceResponse<List<StoreResponse>>>> GetStoreByProductIdGroupBySize(int productId)
         {
             var response = await _storeService.GetStoreByProductIdGroupBySize(productId);
