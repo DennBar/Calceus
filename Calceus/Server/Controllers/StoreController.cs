@@ -15,7 +15,7 @@ namespace Calceus.Server.Controllers
             _storeService = storeService;
         }
 
-        [HttpGet("product/{productId}"), Authorize(Roles = "business")]
+        [HttpGet("product/{productId}")]
         public async Task<ActionResult<ServiceResponse<List<StoreResponse>>>> GetStoreByProductIdGroupBySize(int productId)
         {
             var response = await _storeService.GetStoreByProductIdGroupBySize(productId);
