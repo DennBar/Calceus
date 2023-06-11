@@ -1,5 +1,77 @@
-﻿<h3>OrderStatus</h3>
+﻿@page "/orders/status"
+@inject IOrderService OrderService
+
+<PageTitle>Estado de órdenes</PageTitle>
+
+<div class="container">
+    @if (isProcessing)
+    {
+        <div class="my-lg-5 d-flex align-items-center justify-content-center">
+            <div class="spinner-border text-primary"
+             style="width: 3rem; height: 3rem;"
+             role="status">
+            </div>
+        </div>
+    }
+    else
+    {
+        if (orders == null)
+        {
+            <div class="py-2">
+                <div class="alert alert-dismissible alert-secondary">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    <strong>No tienes órdenes, todavía</strong>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="d-flex justify-content-center align-items-center mt-5">
+                <div class="row">
+                    <div class="col">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <td># Orden</td>
+                                            <td>Nombre</td>
+                                            <td>Color</td>
+                                            <td>Talla</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var order in orders)
+                                        {
+                                            <tr>
+                                                <td>@order.OrderVendorItems[0].Id</td>
+                                                <td class="text-end">@order.OrderVendorItems[0].Product.Name</td>
+                                                <td class="text-end">@order.OrderVendorItems[0].Color.Name</td>
+                                                <td class="text-end">@order.OrderVendorItems[0].Size.Cm</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>
 
 @code {
+    bool isProcessing { get; set; } = false;
 
+    List<OrderVendorResponse> orders = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        isProcessing = true;
+
+        orders = await OrderService.GetVendorOrders();
+
+        isProcessing = false;
+    }
 }
