@@ -178,6 +178,7 @@ namespace Calceus.Server.Services.ProductService
             var products = await _context.Products
                .Include(p => p.Category)
                .Include(p => p.Stores)
+               .Where(p => p.Stores.Any(s => s.Quantity > 0))
                .Include(p => p.Images)
                .ToListAsync();
 

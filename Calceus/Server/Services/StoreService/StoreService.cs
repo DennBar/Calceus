@@ -12,9 +12,9 @@
         public async Task<ServiceResponse<List<StoreResponse>>> GetStoreByProductIdGroupBySize(int productId)
         {
             var response = _context.Stores
-                .Where(p => p.ProductId == productId)
+                .Where(p => p.ProductId == productId && p.Quantity > 0)
                 .Include(p => p.Color)
-                .Include(p => p.Size)                
+                .Include(p => p.Size)
                 .GroupBy(g => g.Size.Ec)
                 .ToList()
                 .Select(s => new StoreResponse

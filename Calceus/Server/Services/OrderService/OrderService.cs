@@ -67,7 +67,7 @@
 
             var orders = await _context.Orders
                 .Include(o => o.OrderItems)
-                .ThenInclude(oi => oi.Product)                
+                .ThenInclude(oi => oi.Product)
                 .Where(o => o.UserId == _authService.GetUserId())
                 .OrderByDescending(o => o.OrderDate)
                 .ToListAsync();
@@ -78,7 +78,7 @@
             {
                 Id = o.Id,
                 OrderDate = o.OrderDate,
-                TotalPrice = o.TotalPrice                                
+                TotalPrice = o.TotalPrice
             }));
 
             response.Data = orderCustomerResponse;
@@ -123,14 +123,24 @@
 
             var orderItems = new List<OrderItem>();
 
-            products.ForEach(p => orderItems.Add(new OrderItem
+            products.ForEach(p =>
             {
-                ProductId = p.ProductId,
-                SizeId = p.SizeId,
-                ColorId = p.ColorId,
-                Quantity = p.Quantity,
-                TotalPrice = p.Price * p.Quantity
-            }));
+                orderItems.Add(new OrderItem
+                {
+                    ProductId = p.ProductId,
+                    SizeId = p.SizeId,
+                    ColorId = p.ColorId,
+                    Quantity = p.Quantity,
+                    TotalPrice = p.Price * p.Quantity
+                });
+
+                var store = _context.Stores.SingleOrDefault(s =>
+                    s.ProductId == p.ProductId &&
+                    s.ColorId == p.ColorId &&
+                    s.SizeId == p.SizeId);
+
+                store.Quantity -= p.Quantity;
+            });
 
             var order = new Order
             {
