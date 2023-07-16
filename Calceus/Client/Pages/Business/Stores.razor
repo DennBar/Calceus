@@ -21,6 +21,7 @@
         <table class="table table-striped table-bordered">
             <thead>
                 <tr>
+                    <th scope="col"></th>
                     <th scope="col">Nombre</th>
                     <th scope="col">Categoría</th>
                     <th scope="col">Descripción</th>
@@ -33,6 +34,7 @@
                 @foreach (var product in ProductService.MyProducts)
                 {
                     <tr scope="row">
+                        <td><img class="img-fluid" src="@product.Images[0].Data" alt="@product.Name" /></td>
                         <td>@product.Name</td>
                         <td>@product.Category.Name</td>
                         <td>@product.Description</td>

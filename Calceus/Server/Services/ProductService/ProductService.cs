@@ -60,6 +60,7 @@ namespace Calceus.Server.Services.ProductService
             var products = await _context.Products
                 .Where(p => p.UserId == _authService.GetUserId())
                 .Include(p => p.Category)
+                .Include(p=>p.Images)
                 .Skip((page - 1) * (int)pageSize)
                 .Take((int)pageSize)
                 .ToListAsync();
