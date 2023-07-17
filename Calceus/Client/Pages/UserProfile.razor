@@ -42,30 +42,37 @@
                 <div class="bg-white p-5 rounded-5 text-secondary shadow">
                     <EditForm Model="profile" OnValidSubmit="SubmitProfile">
                         <DataAnnotationsValidator />
-                        <div class="input-group mt-4">
-                            <div class="input-group mt-3">
-                                <InputText id="firstname" placeholder="Nombre" @bind-Value="profile.FirstName" class="form-control" />
+                        <div class="mt-4">
+                            <div class="mb-3">
+                                <label class="form-label" for="Nombre">Nombre</label>
+                                <InputText id="firstname" placeholder="Nombre" @bind-Value="profile.FirstName" class="form-control" required/>
                             </div>
-                            <div class="input-group mt-3">
-                                <InputText id="firstname" placeholder="Apellido" @bind-Value="profile.LastName" class="form-control" />
+                            <div class="mb-3">
+                                <label class="form-label" for="Nombre">Apellido</label>
+                                <InputText id="firstname" placeholder="Apellido" @bind-Value="profile.LastName" class="form-control" required />
                             </div>
-                            <div class="input-group mt-3">
-                                <InputText id="street" placeholder="Calles" @bind-Value="profile.Street" class="form-control" />
+                            <div class="mb-3">
+                                <label class="form-label" for="Nombre">Calles</label>
+                                <InputText id="street" placeholder="Calles" @bind-Value="profile.Street" class="form-control" required />
                             </div>
-                            <div class="input-group mt-3">
-                                <InputText id="city" placeholder="Ciudad" @bind-Value="profile.City" class="form-control" />
+                            <div class="mb-3">
+                                <label class="form-label" for="Nombre">Ciudad</label>
+                                <InputText id="city" placeholder="Ciudad" @bind-Value="profile.City" class="form-control" required />
                             </div>
-                            <div class="input-group mt-3">
-                                <InputText id="province" placeholder="Provincia" @bind-Value="profile.Province" class="form-control" />
+                            <div class="mb-3">
+                                <label class="form-label" for="Nombre">Provincia</label>
+                                <InputText id="province" placeholder="Provincia" @bind-Value="profile.Province" class="form-control" required/>
                             </div>
-                            <div class="input-group mt-3">
+                            <div class="mb-3">
+                                <label class="form-label" for="Nombre">Código postal</label>
                                 <InputText id="postalCode" placeholder="Código postal" @bind-Value="profile.PostalCode" class="form-control" />
                             </div>
-                            <div class="input-group mt-3">
+                            <div class="mb-3">
+                                <label class="form-label" for="Nombre">Country</label>
                                 <InputText id="country" placeholder="Country" @bind-Value="profile.Country" class="form-control" />
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-primary w-100 mt-4 fw-semibold shadow-sm">Guardar</button>
+                        <button type="submit" class="btn btn-primary mt-4 fw-semibold shadow-sm">Guardar</button>
                     </EditForm>
                 </div>
             </div>

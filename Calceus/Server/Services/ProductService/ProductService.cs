@@ -103,7 +103,7 @@ namespace Calceus.Server.Services.ProductService
                 if (store == null)
                 {
                     storeItem.Color = null;
-                    storeItem.Size = null;
+                    storeItem.Size = null;                  
                     storeItem.UserId = _authService.GetUserId();
                     _context.Stores.Add(storeItem);
                 }
@@ -111,6 +111,7 @@ namespace Calceus.Server.Services.ProductService
                 {
                     store.ColorId = storeItem.ColorId;
                     store.SizeId = storeItem.SizeId;
+                    store.Visible = storeItem.Visible;
                     store.Price = storeItem.Price;
                     store.Quantity = storeItem.Quantity;
                 }
