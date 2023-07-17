@@ -86,6 +86,33 @@
             return response;
         }
 
+        public async Task<ServiceResponse<List<OrderSellerResponse>>> GetSellerOrders(int productId)
+        {
+            var response = new ServiceResponse<List<OrderSellerResponse>>();
+
+            var orders = await _context.Orders
+                .Include(o => o.OrderItems)
+                .ThenInclude(oi => oi.Color)
+                .Include(o => o.OrderItems)
+                .ThenInclude(oi => oi.Size)
+                .Include(o => o.OrderItems)
+                .ThenInclude(oi => oi.Product)
+                .ThenInclude(p => p.Images)
+                .Select(o => o.OrderItems.Where(oi => oi.Product.UserId == _authService.GetUserId() && oi.ProductId == productId))
+                .ToListAsync();
+
+            var orderSellerResponse = new List<OrderSellerResponse>();
+
+            orders.ForEach(o => orderSellerResponse.Add(new OrderSellerResponse
+            {
+                OrderSellerItems = o.ToList(),
+            }));
+
+            response.Data = orderSellerResponse;
+
+            return response;
+        }
+
         public async Task<ServiceResponse<List<OrderVendorResponse>>> GetVendorOrders()
         {
             var response = new ServiceResponse<List<OrderVendorResponse>>();

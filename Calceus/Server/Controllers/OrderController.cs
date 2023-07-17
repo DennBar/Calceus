@@ -31,6 +31,14 @@ namespace Calceus.Server.Controllers
             return Ok(response);
         }
 
+        [HttpGet("business/{productId}"), Authorize(Roles = "business")]
+        public async Task<ActionResult<ServiceResponse<List<OrderSellerResponse>>>> GetSellerOrders(int productId)
+        {
+            var response = await _orderService.GetSellerOrders(productId);
+
+            return Ok(response);
+        }
+
         [HttpGet]
         public async Task<ActionResult<ServiceResponse<List<OrderCustomerResponse>>>> GetCustomerOrders()
         {

@@ -1,0 +1,74 @@
+﻿@page "/orders/product/{id:int}"
+@inject IOrderService OrderService
+@attribute [Authorize(Roles = "business")]
+
+<PageTitle>Estado del producto</PageTitle>
+
+<div class="container my-5">
+    @if (isProcessing)
+    {
+        <div class="my-lg-5 d-flex align-items-center justify-content-center">
+            <div class="spinner-border text-primary"
+             style="width: 3rem; height: 3rem;"
+             role="status">
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row justify-content-center align-items-center mt-5">
+            <div class="col-lg-8">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <table class="table table-borderless">
+                            <tbody>
+                                @foreach (var order in orders)
+                                {
+                                    foreach (var product in order.OrderSellerItems)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex mb-2">
+                                                    <div class="flex-shrink-0">
+                                                        <img class="img-fluid" width="45" src="@product.Product.Images[0].Data" />
+                                                    </div>
+                                                    <div class="flex-lg-grow-1 ms-3">
+                                                        <h6 class="small mb-0">@product.Product.Name</h6>
+                                                        <span class="small">Talla: @product.Size</span><br />
+                                                        <span class="small">Color: @product.Color</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>x @product.Quantity</td>
+                                            <td class="text-end">$ @product.TotalPrice</td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                            
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    }
+</div>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    List<OrderSellerResponse> orders = null;
+
+    bool isProcessing = false;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        isProcessing = true;
+
+        orders = await OrderService.GetSellerOrders(Id);
+
+        isProcessing = false;
+    }
+}

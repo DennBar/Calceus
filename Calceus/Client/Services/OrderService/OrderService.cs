@@ -31,6 +31,13 @@
             return response.Data;
         }
 
+        public async Task<List<OrderSellerResponse>> GetSellerOrders(int productId)
+        {
+            var response = await _http.GetFromJsonAsync<ServiceResponse<List<OrderSellerResponse>>>($"api/order/business/{productId}");
+
+            return response.Data;
+        }
+
         public async Task<string> PlaceOrder()
         {
             if (await _authService.IsUserAuthenticated())
